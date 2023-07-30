@@ -175,7 +175,7 @@
                                                     <tr>
                                                         <td style="width:200px;">
 
-                                                            <img height="auto" src="{{ asset('public/images/') }}/{{ Cmf::get_store_value('header_logo') }}" style="border:0;display:block;outline:none;text-decoration:none;width:100%;" width="64" />
+                                                            <img height="auto" src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png" style="border:0;display:block;outline:none;text-decoration:none;width:100%;" width="64" />
 
                                                         </td>
                                                     </tr>

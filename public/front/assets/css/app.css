@@ -6158,7 +6158,8 @@ nav.template-main-menu > ul > li:hover ul.mega-menu {
 }
 
 .login-page-wrap .tab-content {
-    min-width: 470px;
+    min-width: 530px;
+    max-width: 530px;
     background-color: #242424;
     border-radius: 0 15px 15px 15px;
     padding: 50px 60px;

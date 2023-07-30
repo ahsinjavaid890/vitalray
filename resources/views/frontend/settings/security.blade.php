@@ -5,26 +5,6 @@
 @endsection
 @section('content')
 <div class="container">
-@include('frontend.user.profileheader')
-<div class="block-box user-top-header">
-@if($data->id == Auth::user()->id)
-<ul class="menu-list">
-    <li ><a href="{{ url('profile') }}">Timeline</a></li>
-    <li><a href="{{ url('profile/details/about') }}">About</a></li>
-    <li><a href="{{ url('profile/details/gallery') }}">Photos</a></li>
-    <li><a href="{{ url('profile/details/loveplaces') }}">Love Places</a></li>
-    <li class="active"><a href="{{ url('profile/settings/general') }}">Settings</a></li>
-    <li><a href="{{ url('profile/settings/general') }}"></a></li>
-</ul>
-@else
-<ul class="menu-list">
-    <li class="active"><a href="{{ url('profile') }}/{{ $data->username }}">Timeline</a></li>
-    <li><a href="{{ url('profile/details/gallery') }}/{{ $data->username }}">Photos</a></li>
-    <li><a href="{{ url('profile/details/loveplaces') }}/{{ $data->username }}">Love Places</a></li>
-    <li><a href="{{ url('profile/details/about') }}/{{ $data->username }}">About </a></li>
-</ul>
-@endif
-</div>
 <div class="row">
 	<div class="col-lg-12 widget-block widget-break-lg">
         <div class="widget widget-user-about">

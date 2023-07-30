@@ -43,4 +43,8 @@ return [
     'key' => '6Lfn80ocAAAAAKp4FzKmsne0b2s0b5VMdrI3bcaL',
     'secret' => '6Lfn80ocAAAAABOaVarJnYlkPKFHrrw0gdLwzLbi',
     ],
+    'stripe' => [
+        'model'  => App\User::class,
+        'secret' => env('STRIPE_SECRET'),
+    ],
 ];

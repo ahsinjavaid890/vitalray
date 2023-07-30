@@ -6,13 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Chat;
-use App\Models\usernotifications;
-use App\Models\peoplereviews;
-use App\Models\subscribedplans;
-use App\Models\selectedplaces;
-use App\Models\userplaces;
-use App\Models\userfields;
+use App\Models\Plan;
 use Validator;
 use Auth;
 use PDF;
@@ -20,6 +14,7 @@ use DB;
 use Storage;
 use Carbon;
 use Stripe;
+use Redirect;
 class UserController extends Controller
 {
 
@@ -27,289 +22,48 @@ class UserController extends Controller
     {
         $this->middleware('Userauthenticate');
     }
-    public function searchheaderpeoples($id)
-    {
-        $data = user::where('user_type' , 'customer')->whereNotIn('id', [Auth::user()->id])->where('active' , 1)->where('is_admin' , 0)->where('name','like', '%' .$id. '%' )->get();
-
-        if($data->count() > 0)
-        {
-            foreach ($data as $r) {
-                echo '<a style="width:100%;" href="'.url('profile').'/'.$r->username.'"><div>'.$r->name.'</div></a>';
-            }
-        }else{
-            echo '<span style=" padding-top: 50%; position: absolute; left: 30%; ">No User Found</span>';
-        }
-        
-    }
-    public function sendNotification(Request $request)
-    {
-        $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
-            
-        $SERVER_API_KEY = 'AIzaSyA-IGKMe9-2VDoQXye2L4r1IVP0aMNqljQ';
-  
-        $data = [
-            "registration_ids" => $firebaseToken,
-            "notification" => [
-                "title" => $request->title,
-                "body" => $request->body,  
-            ]
-        ];
-        $dataString = json_encode($data);
-    
-        $headers = [
-            'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-        ];
-    
-        $ch = curl_init();
-      
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-               
-        $response = curl_exec($ch);
-  
-
-        print_r($response);
-    }
-    public function friendrequests()
-    {
-        $data = Auth::user();
-        $user1 = User::find(Auth::user()->id);
-        $friendrequest = $user1->getFriendRequests();
-        return view('frontend.user.friendrequest')->with(array('data'=>$data,'friendrequest'=>$friendrequest));
-    }
-    public function allfriends()
-    {
-        $data = Auth::user();
-        $user1 = User::find(Auth::user()->id);
-        $friendrequest = $user1->getFriends();
-        return view('frontend.user.allfriends')->with(array('data'=>$data,'friendrequest'=>$friendrequest));
-    }
-
-    public function sentrequests()
-    {
-        $data = Auth::user();
-        $user1 = User::find(Auth::user()->id);
-        $friendrequest = $user1->getPendingFriendships();
-        // print_r($friendrequest);exit;
-        return view('frontend.user.sentrequests')->with(array('data'=>$data,'friendrequest'=>$friendrequest));
-    }
-    public function chatroom()
-    {
-        $id = Auth::user()->id;
-        $currentUser=User::find($id);
-        $chatUsers=DB::SELECT("SELECT chat.* FROM chat, (SELECT MAX(id) as lastid FROM chat WHERE (chat.sendTo = ".$id." OR chat.sendby = ".$id.") GROUP BY CONCAT(LEAST(chat.sendTo ,chat.sendby ),'.', GREATEST(chat.sendTo , chat.sendby))) as conversations WHERE id = conversations.lastid ORDER BY chat.created_at DESC");
-        return view('frontend.chat.chatroom')->with(array('chatUsers'=>$chatUsers,'currentUser'=>$currentUser));
-    }
-
-    public function chatwithuser($username)
-    {
-        $id = User::where('username' , $username)->get()->first()->id;
-        $currentUser=Auth::user();
-        $chatUsers=DB::SELECT("SELECT chat.* FROM chat, (SELECT MAX(id) as lastid FROM chat WHERE (chat.sendTo = ".$currentUser->id." OR chat.sendby = ".$currentUser->id.") GROUP BY CONCAT(LEAST(chat.sendTo ,chat.sendby ),'.', GREATEST(chat.sendTo , chat.sendby))) as conversations WHERE id = conversations.lastid ORDER BY chat.created_at DESC");
-        Chat::where('sendBy',$id)->update(['read'=>1]);
-        return view('frontend.chat.chatwithuser')->with(array('chat'=>$id,'chatUsers'=>$chatUsers,'currentUser'=>$currentUser));
-    }
     public function dashboard()
     {
-        $data = Auth::user();
-        $placesselected = selectedplaces::select(
-            "selectedplaces.id",
-            "selectedplaces.user_id",
-            "selectedplaces.places",
-            "selectedplaces.created_at",
-            "places.name",
-            "places.image",
-            "places.id as place_id")
-            ->leftJoin('places', 'selectedplaces.places', '=', 'places.id')
-            ->where('selectedplaces.user_id' , Auth::user()->id)
-            ->get();
-        return view('frontend.user.userprofile')->with(array('data'=>$data,'placesselected'=>$placesselected));
+
+        if(Auth::user()->plan)
+        {
+
+            if(Auth::user()->payement_method == 'stripe')
+            {
+                $checksubscription = Cmf::checkstatusstripesubscription();
+                if($checksubscription == 'active')
+                {
+                    return view('frontend.user.profile');
+                }else{
+                    $url = url('plans');
+                    return Redirect::to($url);
+                }
+            }
+
+        }else{
+            $url = url('plans');
+            return Redirect::to($url);
+        }
     }
-    public function userprofile($id)
+    public function cancelsubscription()
     {
-        $data = user::where('username' , $id)->get()->first();
-        $placesselected = selectedplaces::select(
-            "selectedplaces.id",
-            "selectedplaces.user_id",
-            "selectedplaces.places",
-            "selectedplaces.created_at",
-            "places.name",
-            "places.image")
-            ->leftJoin('places', 'selectedplaces.places', '=', 'places.id')
-            ->where('selectedplaces.user_id' , $data->id)
-            ->get();
-        return view('frontend.user.userprofile')->with(array('data'=>$data,'placesselected'=>$placesselected));
+
+        $subscriptionid = DB::table('subscriptions')->where('user_id' , Auth::user()->id)->where('stripe_status' , 'active')->first()->stripe_id;
+
+        $stripe = new \Stripe\StripeClient('sk_test_xGtUq0Ocmz3drfEP0TOftndI005V9FjVqF');
+        $response = $stripe->subscriptions->cancel($subscriptionid,['prorate' => 'true']);
+
+        DB::table('subscriptions')->where('user_id' , Auth::user()->id)->where('stripe_id' , $subscriptionid)->update(array('stripe_status' => 'cancel'));
+
+        $url = url('profile');
+        return Redirect::to($url);
     }
     public function about()
     {
         $data = Auth::user();
         return view('frontend.user.aboutinfo')->with(array('data'=>$data));
     }
-    public function loveplaces()
-    {
-        $data = Auth::user();
-        $placesselected = selectedplaces::select(
-            "selectedplaces.id",
-            "selectedplaces.user_id",
-            "selectedplaces.places",
-            "selectedplaces.created_at",
-            "places.name",
-            "places.image")
-            ->leftJoin('places', 'selectedplaces.places', '=', 'places.id')
-            ->where('selectedplaces.user_id' , $data->id)
-            ->get();
-        return view('frontend.user.loveplaces')->with(array('data'=>$data,'placesselected'=>$placesselected));
-    }
-    public function invitations()
-    {
-        return view('frontend.user.invitations');
-    }
-    public function acceptplaceinvitation($id)
-    {
-        $place = userplaces::find($id);
-        $place->status = 'approved';
-        $place->save();
-        $placename = DB::table('places')->where('id' , $place->place_id)->get()->first();
-        $notification = Auth::user()->name." Accepted your Invitation in ".$placename->name." For Date";
-        $url = url("mydates");
-        $name = Auth::user()->name;
-        $type = "invitation";
-        Cmf::saveusernotfication($place->send_id,$notification,$url,$name,$type);
-        return redirect()->back()->with('message', 'Accepted Successfully');
-    }
-    public function rejectplaceinvitation($id)
-    {
-        $place = userplaces::find($id);
-        $place->status = 'rejected';
-        $place->save();
-        $placename = DB::table('places')->where('id' , $place->place_id)->get()->first();
-        $notification = Auth::user()->name." Rejected your Invitation in ".$placename->name." For Date";
-        $url = url("profile");
-        $name = Auth::user()->name;
-        $type = "invitation";
-        Cmf::saveusernotfication($place->send_id,$notification,$url,$name,$type);
-        return redirect()->back()->with('message', 'Accepted Successfully');
-    }
-    public function sendlove($id)
-    {
-        $user1 = User::find(Auth::user()->id);
-        $user2 = User::find($id);
-        $user1->befriend($user2);
-        return redirect()->back()->with('message', 'Request Sended Successfully');
-    }
-    public function cancellove($id)
-    {
-        DB::Table('friendships')->where('sender_id' , Auth::user()->id)->where('recipient_id' , $id)->where('status' , 'pending')->delete();
-        return redirect()->back()->with('message', 'Cancel REquest Successfully');
-    }
-    public function unfriend($id)
-    {
-        $user1 = User::find(Auth::user()->id);
-        $user2 = User::find($id);
-        $user1->unfriend($user2);
-        return redirect()->back()->with('message', 'Unfriend Successfully');
-    }
-    public function sentplaceinvite($id , $userid)
-    {
-        $sent = new userplaces();
-        $sent->send_id = Auth::user()->id;
-        $sent->reciever_id = $userid;
-        $sent->place_id = $id;
-        $sent->status = 'pending';
-        $sent->save();
-        $place = DB::table('places')->where('id' , $id)->get()->first();
-        $notification = Auth::user()->name." Invite You in ".$place->name." For Date";
-        $url = url("profile/details/invitations");
-        $name = " ";
-        $type = "invitation";
-        Cmf::saveusernotfication($userid,$notification,$url,$name,$type);
-
-        return redirect()->back()->with('message', 'Invitation Sended Successfully');
-    }
-
-    public function chatall()
-    {
-        return view('frontend.chat.all');
-    }
-
-    public function getcompletenotifications()
-    {
-        $user1 = User::find(Auth::user()->id);
-        $friendrequests = $user1->getFriendRequests();
-        $notification = usernotifications::where('user_id' , Auth::user()->id)->where('read_status' , 1)->count();
-        $chat = Chat::where('sendTo' , Auth::user()->id)->where('read' , 0)->count();
-        return response()->json(['friendrequests' => $friendrequests->count(),'notification' => $notification,'chat' => $chat]);
-    }
-
-    public function notifications()
-    {
-        $notifications = usernotifications::where('user_id' , Auth::user()->id)->orderby('read_status' , 'desc')->get();
-        return view('frontend.user.notifications')->with(array('data'=>$notifications));
-    }
-
-    public function changecoverphoto(Request $request)
-    {
-        $this->validate($request, [
-            'coverphoto' => 'required',
-        ]);
-        $image =  Cmf::sendimagetodirectory($request->coverphoto);
-        $user = user::find(Auth::user()->id);
-        $user->coverimage = $image;
-        $user->save();
-        Cmf::save_media_image($image  , 'cover' , Auth::user()->id);
-        return redirect()->back()->with('message', 'Media Image Updated Successfully');
-    }
-
-
-    public function addgalleryphoto(Request $request)
-    {
-        $image =  Cmf::sendimagetodirectory($request->profileimage);
-        Cmf::save_media_image($image  , 'gallary' , Auth::user()->id);
-
-        $user = user::find(Auth::user()->id);
-        $getprevious = $user->imagesupload;
-        $user->imagesupload = $getprevious+1;
-        $user->save();
-
-        return redirect()->back()->with('message', 'Gallery Image Added Successfully');
-    }
-    public function deleteallery($id)
-    {
-        $image = DB::Table('mediaimages')->where('id' , $id)->first();
-        if($image->type == 'gallary')
-        {
-            $user = user::find(Auth::user()->id);
-            $getprevious = $user->imagesupload;
-            $user->imagesupload = $getprevious-1;
-            $user->save();
-        }
-        DB::Table('mediaimages')->where('id' , $id)->delete();
-        return redirect()->back()->with('message', 'Gallary Image Deleted Successfully');
-    }
-    public function removeplace($id)
-    {
-        selectedplaces::where('id' , $id)->delete();
-        return redirect()->back()->with('message', 'Places Deleted Successfully');
-    }
-    public function saveplaces(Request $request)
-    {
-        selectedplaces::where('user_id' , Auth::user()->id)->delete();
-        if($request->selectedplaces)
-        {
-            foreach ($request->selectedplaces as $r) {
-                $place = new selectedplaces();
-                $place->user_id = Auth::user()->id;
-                $place->places = $r;
-                $place->save();
-            }
-        }
-        return redirect()->back()->with('message', 'Places Updated Successfully');
-    }
+    
     public function changeprofilephoto(Request $request)
     {
         $this->validate($request, [
@@ -327,19 +81,9 @@ class UserController extends Controller
         $data = Auth::user();
         return view('frontend.settings.general')->with(array('data'=>$data));
     }
-    public function subscribesettings()
+    public function frequencies()
     {
-        $data = Auth::user();
-
-        $check = subscribedplans::where('user_id'  , $data->id);
-
-        if($check->count() == 0)
-        {
-            return view('frontend.settings.subscribe')->with(array('data'=>$data));
-        }else{
-            return view('frontend.settings.subscribed')->with(array('data'=>$data,'plan'=>$check->get()->first()));
-        }
-        
+        return view('frontend.user.frequencies');
     }
     public function securitysettings()
     {
@@ -347,40 +91,12 @@ class UserController extends Controller
         return view('frontend.settings.security')->with(array('data'=>$data));
     }
 
-    public function viewgallery()
+
+    public function plans()
     {
-        $data = user::where('id' , Auth::user()->id)->get()->first();
-        $galery = DB::table('mediaimages')->where('user_id' , Auth::user()->id)->orderby('id' , 'desc')->get();
-        return view('frontend.user.gallery')->with(array('data'=>$data,'galery'=>$galery));
-    }
-
-    public function subscribeplan($id)
-    {
-        $plan = DB::table('subscriptionplans')->where('id' , $id)->get()->first();
-        $data = Auth::user();
-        if($plan->price > 0)
-        {
-            return view('frontend.settings.subscribeplan')->with(array('data'=>$data,'plan'=>$plan));
-        }
-        else
-        {
-            if(Auth::user()->free_subscription == 1)
-            {
-                return redirect()->back()->with('message', 'Plan Already Subscribed');
-            }else{
-                $user = user::find(Auth::user()->id);
-                $user->free_subscription = 1;
-                $user->save();
-
-
-                $plan = new subscribedplans();
-                $plan->user_id = Auth::user()->id;
-                $plan->plan_id = $id;
-                $plan->save();
-                return redirect()->back()->with('message', 'Plan Successfully Subscribed');
-            }
-            
-        }
+        $plans = Plan::get();
+  
+        return view("frontend.settings.plans", compact("plans"));
     }
     public function statuschange($id)
     {
@@ -525,7 +241,8 @@ class UserController extends Controller
     public function updategeneraldetails(Request $request)
     {
         $user = user::find(Auth::user()->id);
-        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
         $user->phonenumber = $request->phonenumber;
         $user->age = $request->age;
         $user->height = $request->height;

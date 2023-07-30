@@ -19,7 +19,7 @@
         <div class="content-wrap">
             <div class="login-content">
                 <div class="item-logo">
-                    <a href="{{ url('') }}"><img src="{{ asset('public/images/') }}/{{ Cmf::get_store_value('footer_logo') }}" alt="logo"></a>
+                    <a href="{{ url('') }}"><img width="130" src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png" alt="logo"></a>
                 </div>
                 <div class="login-form-wrap">
                     <ul class="nav nav-tabs" role="tablist">
