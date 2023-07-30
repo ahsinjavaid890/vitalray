@@ -31,35 +31,18 @@ class SocialiteController extends Controller
             $finduser = User::where('email', $user->email)->first();
             if($finduser){
                 Auth::login($finduser);
-                if(Auth::user()->active == 0)
-                {
-
-                    Auth::logout();
-                    return redirect()->route('user.signin')->with(array('activeerror'=>'Your Account is Deactive. For Activation pease Contact US'));
-                }
-                Cmf::online();
                 return redirect()->route('userprofile');
             }else{
-                $name = $user->name;
-                $email = $user->email;
                 $user = new User;
-                $user->name = $name;
-                $user->email = $email;
-                $user->username = $this->generate_username($name);
+                $user->first_name = $user->name;
+                $user->email = $user->email;
                 $user->user_type ='customer';
-                if(Cmf::get_store_value('vendor_pending_to_approve') == 'on')
-                {
-                    $user->approve_status = 'approved';
-                }else{
-                    $user->approve_status = 'notapproved';
-                    $user->new = 1;
-                }
                 $user->active = 1;
                 $user->is_admin =0;
-                $user->steps =1;
                 $user->save();
-                session()->put('user_id_temp', $user->id);
-                return redirect()->route('user.signup')->with('message', "Please Complete Your Profile");
+                $finduser = User::where('email', $user->email)->first();
+                Auth::login($finduser);
+                return redirect()->route('userprofile');
             }
         } catch (Exception $e) {
             dd($e->getMessage());

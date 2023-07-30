@@ -30,9 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
     'google' => [
-        'client_id' => '874927845773-72ho5esisn522jlgn6ddi3kcrjkb2fed.apps.googleusercontent.com',
-        'client_secret' => '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',
-        'redirect' => 'http://baecay.petprotectusa.com/auth/google/callback',
+        'client_id' => '874927845773-r7hb0ngq6eodvhar9rfaq61tiajmt44q.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => 'http://dev.vitalray.us/auth/google/callback',
     ],
     'facebook' => [
         'client_id' => '281506560540781',
