@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Cmf;
 use Illuminate\Http\Request;
 use App\Models\modules;
-use App\Models\dynamicpages;
+use App\Models\freequencies;
 use App\Models\user;
 use App\Models\allbanners;
 use App\Models\allbrands;
@@ -100,54 +100,57 @@ class AdminController extends Controller
     {
         return view('admin.freequency.add');
     }
-
-    public function allplaces()
+    public function createfreequency(Request $request)
     {
-        $data = DB::table('places')->where('delete_status' , 'active')->get();
-        $countries = DB::table('countries')->where('delete_status' , 'active')->get();
-        return view('admin.places.all')->with(array('data'=>$data,'countries'=>$countries));
+        $add = new freequencies();
+        $add->name  = $request->name;
+        $add->slug  = Cmf::shorten_url($request->name);
+        $add->freequency  = Cmf::sendimagetodirectory($request->freequency);
+        $add->image  = Cmf::sendimagetodirectory($request->image);
+        $add->vibration  = $request->vibration;
+        $add->emitter  = $request->emitter;
+        $add->description  = $request->description;
+        $add->show_on_homepage  = $request->show_on_homepage;
+        $add->save();
+        return redirect()->back()->with('message', 'Freequency Added Successfully');
     }
-    public function editplace($id)
+    public function allfreequencies()
     {
-        $data = DB::table('places')->where('id' , $id)->get()->first();
-        $countries = DB::table('countries')->where('delete_status' , 'active')->get();
-        return view('admin.places.edit')->with(array('data'=>$data,'countries'=>$countries));
+        $data = freequencies::orderby('id' , 'desc')->paginate(10);
+        return view('admin.freequency.all')->with(array('data'=>$data));
     }
-    public function createplace(Request $request)
+    public function editfreequency($id)
     {
-
-       $check  = DB::table('places')->where('delete_status' , 'active')->where('name' , $request->name)->count();
-       if($check == 0)
-       {
-           $image =  Cmf::sendimagetodirectory($request->image);
-           $data = array('countries' =>$request->country ,'name' =>$request->name ,'image'=>$image,'published_status'=>'published','delete_Status'=>'active');
-           DB::table('places')->insert($data);
-           return redirect()->back()->with('message', 'Place Added Successfully');
-       }else{
-        return redirect()->back()->with('warning', 'Country Name Already Added');
-       }
+        $data = DB::table('freequencies')->where('id' , $id)->get()->first();
+        return view('admin.freequency.edit')->with(array('data'=>$data));
     }
+    
 
-    public function deleteplace($id)
+    public function deletefreequency($id)
     {
-        DB::table('selectedplaces')->where('places' , $id)->delete();
-        DB::table('places')->where('id' , $id)->delete();
-        return redirect()->back()->with('message', 'Place Deleted Successfully');
+        DB::table('freequencies')->where('id' , $id)->delete();
+        return redirect()->back()->with('message', 'freequency Deleted Successfully');
     }
 
-    public function updateplace(Request $request)
+    public function updatefreequency(Request $request)
     {
-        if(!empty($request->image))
+        $add = freequencies::find($request->id);
+        $add->name  = $request->name;
+        $add->slug  = Cmf::shorten_url($request->name);
+        if($request->freequency)
         {
-           $image =  Cmf::sendimagetodirectory($request->image);
-           $data = array('countries' =>$request->country ,'details' =>$request->details ,'name' =>$request->name ,'image'=>$image,'published_status'=>$request->status,'show_on_homepage'=>$request->show_on_homepage);
-           DB::table('places')->where('id' , $request->id)->update($data);
-           return redirect()->back()->with('message', 'Place Updated Successfully');
-        }else{
-           $data = array('countries' =>$request->country,'details' =>$request->details ,'name' =>$request->name ,'published_status'=>$request->status,'show_on_homepage'=>$request->show_on_homepage);
-           DB::table('places')->where('id' , $request->id)->update($data);
-           return redirect()->back()->with('message', 'Place Updated Successfully');
+            $add->freequency  = Cmf::sendimagetodirectory($request->freequency);
         }
+        if($request->image)
+        {
+            $add->image  = Cmf::sendimagetodirectory($request->image);
+        }
+        $add->vibration  = $request->vibration;
+        $add->emitter  = $request->emitter;
+        $add->description  = $request->description;
+        $add->show_on_homepage  = $request->show_on_homepage;
+        $add->save();
+        return redirect()->back()->with('message', 'Freequency Updated Successfully');
     }
 
     public function allcountries()

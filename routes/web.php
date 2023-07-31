@@ -174,10 +174,11 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::group(['prefix' => 'freequency'], function () { 
         Route::get('/add', [AdminController::class, 'addfreequency']);
-        Route::get('edit/{id}', [AdminController::class, 'editplace']);
-        Route::get('delete/{id}', [AdminController::class, 'deleteplace']);
-        Route::POST('create', [AdminController::class, 'createplace']);
-        Route::POST('updatecountry', [AdminController::class, 'updateplace']);
+        Route::get('/all', [AdminController::class, 'allfreequencies']);
+        Route::get('edit/{id}', [AdminController::class, 'editfreequency']);
+        Route::get('delete/{id}', [AdminController::class, 'deletefreequency']);
+        Route::POST('createfreequency', [AdminController::class, 'createfreequency']);
+        Route::POST('updatefreequency', [AdminController::class, 'updatefreequency']);
     });
 
     

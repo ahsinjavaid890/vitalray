@@ -15,7 +15,7 @@
                         <li class="breadcrumb-item active">Profile</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Profile - {{ Auth::user()->name }}</h4>
+                <h4 class="page-title">Profile - {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h4>
             </div>
         </div>
     </div>     
@@ -39,9 +39,9 @@
         <div class="col-xl-4 col-lg-5">
             <div class="card text-center">
                 <div class="card-body">
-                    <img src="{{asset('public/images')}}/{{ Auth::user()->profileimage }}" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
+                    <img src="https://static.vecteezy.com/system/resources/previews/007/296/443/original/user-icon-person-icon-client-symbol-profile-icon-vector.jpg" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
 
-                    <h4 class="mb-0 mt-2">{{ Auth::user()->name }}</h4>
+                    <h4 class="mb-0 mt-2">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h4>
                     <p class="text-muted font-14">Admin</p>
 
                     <div class="text-left mt-3">
@@ -49,7 +49,7 @@
                         <p class="text-muted font-13 mb-3">
                             {{ Auth::user()->bio }}
                         </p>
-                        <p class="text-muted mb-2 font-13"><strong>Full Name :</strong> <span class="ml-2">{{ Auth::user()->name }}</span></p>
+                        <p class="text-muted mb-2 font-13"><strong>Full Name :</strong> <span class="ml-2">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span></p>
 
                         <p class="text-muted mb-2 font-13"><strong>Mobile :</strong><span class="ml-2">{{ Auth::user()->phonenumber }}</span></p>
 
@@ -72,25 +72,31 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="firstname">Name</label>
-                                    <input type="text" value="{{ Auth::user()->name }}" class="form-control" placeholder="First Name" name="name">
+                                    <label for="firstname">First Name</label>
+                                    <input type="text" value="{{ Auth::user()->first_name }}" class="form-control" placeholder="First Name" name="first_name">
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="firstname">Last Name</label>
+                                    <input type="text" value="{{ Auth::user()->last_name }}" class="form-control" placeholder="First Name" name="last_name">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="firstname">Email</label>
                                     <input readonly="" type="text" value="{{ Auth::user()->email }}" class="form-control" placeholder="Email" name="email">
                                 </div>
                             </div> <!-- end col -->
                         </div>
-                        <div class="row">
+                       <!--  <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="firstname">Profile Image</label>
                                     <input type="file" class="form-control" name="profileimage">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                        <!--  <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

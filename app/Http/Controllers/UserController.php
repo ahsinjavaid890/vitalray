@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\freequencies;
 use App\Models\Plan;
 use Validator;
 use Auth;
@@ -83,7 +84,8 @@ class UserController extends Controller
     }
     public function frequencies()
     {
-        return view('frontend.user.frequencies');
+        $data = freequencies::orderby('id' , 'desc')->paginate(10);
+        return view('frontend.user.frequencies')->with(array('data'=>$data));
     }
     public function securitysettings()
     {

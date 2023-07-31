@@ -25,9 +25,9 @@ class DashboardController extends Controller
         if($request->profileimage)
         {
             $profileimage = Cmf::sendimagetodirectory($request->profileimage);
-            $data = array('name'=>$request->name,"email"=>$request->email,"profileimage"=>$profileimage);
+            $data = array('first_name'=>$request->first_name,'last_name'=>$request->last_name,"email"=>$request->email,"profileimage"=>$profileimage);
         }else{
-            $data = array('name'=>$request->name,"email"=>$request->email);
+            $data = array('first_name'=>$request->first_name,'last_name'=>$request->last_name,"email"=>$request->email);
         }
 
         

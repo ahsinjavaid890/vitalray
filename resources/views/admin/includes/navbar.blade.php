@@ -13,14 +13,13 @@
         </a>
 
         <ul class="list-unstyled topbar-right-menu float-right mb-0">
-            <li  class="dropdown notification-list">
+            <!-- <li  class="dropdown notification-list">
 <a onclick="shownotification()" class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
 <i class="dripicons-bell noti-icon"></i>
 <span class="noti-icon-badge">{{ DB::table('adminnotification')->where('status' , 1)->count() }}</span>
 </a>
 <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated dropdown-lg">
 
-<!-- item-->
 <div class="dropdown-item noti-title">
     <h5 class="m-0">
         <span class="float-right">
@@ -38,22 +37,21 @@
     
 </div>
 
-<!-- All-->
 <a href="{{ url('admin/notifications') }}" class="dropdown-item text-center text-primary notify-item notify-all">
     View All
 </a>
 
 </div>
-</li>
+</li> -->
 
             <li class="dropdown notification-list">
                 <a class="nav-link dropdown-toggle nav-user arrow-none mr-0" data-toggle="dropdown" id="topbar-userdrop" href="#" role="button" aria-haspopup="true"
                     aria-expanded="false">
                     <span class="account-user-avatar"> 
-                        <img src="{{asset('public/images')}}/{{ Auth::user()->profileimage }}" alt="user-image" class="rounded-circle">
+                        <img src="https://static.vecteezy.com/system/resources/previews/007/296/443/original/user-icon-person-icon-client-symbol-profile-icon-vector.jpg" alt="user-image" class="rounded-circle">
                     </span>
                     <span>
-                        <span class="account-user-name text-primary">{{Auth::user()->name}}</span>
+                        <span class="account-user-name text-primary">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</span>
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated topbar-dropdown-menu profile-dropdown" aria-labelledby="topbar-userdrop">
