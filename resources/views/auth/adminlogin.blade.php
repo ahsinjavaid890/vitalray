@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
-  <title>{{ Cmf::get_store_value('site_name') }} Admin | Login</title>
+  <title>Admin | Login</title>
   <!-- Stylesheets -->
   <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,900&amp;display=swap" rel="stylesheet" />
   <link href="{{ asset('/public/admin/assets/css/icons.min.css') }}" rel="stylesheet" />
@@ -46,9 +46,7 @@
 
                             <!-- Logo -->
                             <div class="card-header pt-4 pb-4 text-center bg-white">
-                                <a href="{{ url('') }}">
-                                    <span><img src="{{ asset('public/images/') }}/{{ Cmf::get_store_value('footer_logo') }}" alt="" height="40"></span>
-                                </a>
+                                <a href="{{ url('') }}"><img width="130" src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png" alt="logo"></a>
                             </div>
 
                             <div class="card-body p-4">
