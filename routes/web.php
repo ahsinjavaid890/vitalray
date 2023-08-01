@@ -30,6 +30,7 @@ Route::get('/paypal', [AuthUserController::class, 'getPaymentStatus'])->name('st
 
 Route::middleware("auth")->group(function () {
     Route::get('plans', [PlanController::class, 'index']);
+    Route::get('conferm', [PlanController::class, 'conferm']);
     Route::get('plans/{plan}', [PlanController::class, 'show'])->name("plans.show");
     Route::post('subscription', [PlanController::class, 'subscription'])->name("subscription.create");
 });

@@ -55,7 +55,11 @@ class PlanController extends Controller
         $update->payement_method = 'stripe';
         $update->save();
 
-        $url = url('profile');
+        $url = url('conferm');
         return Redirect::to($url);
+    }
+    public function conferm()
+    {
+        return view('frontend.user.conferm');
     }
 }
