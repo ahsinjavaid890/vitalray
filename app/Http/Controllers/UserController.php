@@ -22,6 +22,7 @@ class UserController extends Controller
     public function __construct()
     {
         // $this->middleware('Userauthenticate');
+        $this->middleware('auth');
     }
     public function dashboard()
     {

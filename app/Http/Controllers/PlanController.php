@@ -45,16 +45,11 @@ class PlanController extends Controller
     public function subscription(Request $request)
     {
         $plan = Plan::find($request->plan);
-  
-        $subscription = $request->user()->newSubscription($request->plan, $plan->stripe_plan)
-                        ->create($request->token);
-  
-
+        $subscription = $request->user()->newSubscription($request->plan, $plan->stripe_plan)->create($request->token);
         $update = User::find(Auth::user()->id);
         $update->plan = $request->plan;
         $update->payement_method = 'stripe';
         $update->save();
-
         $url = url('conferm');
         return Redirect::to($url);
     }

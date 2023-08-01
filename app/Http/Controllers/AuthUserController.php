@@ -126,7 +126,7 @@ class AuthUserController extends Controller
 
     public function verifyemail()
     {
-        return view('frontend.auth.verifyemail');
+        return view('auth.verifyemail');
     }
     public function submiverifyemail(Request $request)
     {

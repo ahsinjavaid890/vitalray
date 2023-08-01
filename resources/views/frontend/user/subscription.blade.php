@@ -15,7 +15,9 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    You will be charged ${{ number_format($plan->price, 2) }} for {{ $plan->name }} Plan
+                    You will be charged ${{ number_format($plan->price, 2) }} for {{ $plan->name }} Plan<br>
+                    Plateform Free {{number_format(4, 2)}}<br>
+                    Total  = {{ number_format($plan->price+4, 2) }}
                 </div>
   
                 <div class="card-body">
