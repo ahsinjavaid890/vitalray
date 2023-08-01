@@ -8,7 +8,7 @@ use Auth;
 use Session;
 use Carbon\Carbon;
 use App\Models\orders;
-use App\Models\orderdetails;
+use App\Models\subscriptions;
 use App\Models\User;
 use App\Models\mediaimages;
 use App\Models\orderstatus;
@@ -26,6 +26,18 @@ class Cmf
         $noti->url = $url;
         $noti->name = $name;
         $noti->save();
+    }
+    public static function checksubscriptionpaypal()
+    {
+        $subscriptions = subscriptions::where('user_id' , Auth::user()->id)->first();
+        $startdate = date('d-M-Y', strtotime($subscriptions->ends_at));
+        $expire = strtotime($startdate. ' + 2 days');
+        $today = strtotime("today midnight");
+        if($expire >= $today){
+            return "expired";
+        } else {
+            return "active";
+        }
     }
     public static function checkstatusstripesubscription()
     {

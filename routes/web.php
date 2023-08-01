@@ -12,6 +12,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Vendor\ChatController;
 use App\Http\Controllers\Admin\Auth\AuthController;
@@ -22,10 +23,8 @@ use App\Models\Chat;
 // Admin
 
 
-Route::POST('/paypal', [AuthUserController::class, 'postPaymentWithpaypal'])->name('paypal');
-Route::get('/paypal', [AuthUserController::class, 'getPaymentStatus'])->name('status');
-// WEbsite Routes
-
+Route::get('/paypalpayement/{id}', [PayPalController::class, 'postPaymentWithpaypal'])->name('paypal');
+Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('status');
 
 
 Route::middleware("auth")->group(function () {

@@ -42,6 +42,20 @@ class UserController extends Controller
                 }
             }
 
+
+            if(Auth::user()->payement_method == 'paypal')
+            {
+                $checksubscription = Cmf::checksubscriptionpaypal();
+                if($checksubscription == 'active')
+                {
+                    return view('frontend.user.profile');
+                }else{
+                    $url = url('plans');
+                    return Redirect::to($url);
+                }
+            }
+
+
         }else{
             $url = url('plans');
             return Redirect::to($url);
