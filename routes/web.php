@@ -48,6 +48,7 @@ Route::get('/terms-and-conditions', [SiteController::class, 'termsandconditions'
 Route::get('/cookies-policy', [SiteController::class, 'cookiespolicy']);
 Route::post('stripe', [AuthUserController::class, 'stripePost'])->name('stripe.post');
 Route::get('/search', [SiteController::class, 'mainsearch']);
+Route::get('/page/{id}', [SiteController::class, 'page']);
 Route::get('/contact-us', [SiteController::class, 'contactus']);
 Route::get('auth/google', [SocialiteController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
@@ -93,7 +94,8 @@ Route::group(['prefix' => 'profile'], function () {
     Route::POST('/securetycredentials', [UserController::class, 'securetycredentials']);
     Route::get('/plans', [UserController::class, 'plans']);
     Route::get('/frequencies', [UserController::class, 'frequencies']);
-    
+    Route::get('/frequency/{id}/{url}', [UserController::class, 'freequencydetail']);
+
 });
 
 

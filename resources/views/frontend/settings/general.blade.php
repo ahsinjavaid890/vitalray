@@ -23,9 +23,13 @@
                 <div class="card-body">
                     <h4 class="mb-0">Edit Profile</h4>
                     <p class="mt-0">Change your profile information</p>
-                    <form method="POST" action="{{ url('profile/updategeneraldetails') }}">
+                    <form enctype="multipart/form-data" method="POST" action="{{ url('profile/updategeneraldetails') }}">
                         {{ csrf_field() }}
                     <div class="mt-3">
+                        <div class="form-group">
+                            <label class="lable-control">Profile Image</label>
+                            <input type="file"  name="profileimage" class="form-control" >
+                        </div>
                         <div class="form-group">
                             <label class="lable-control">First Name</label>
                             <input type="text" value="{{ $data->first_name }}" name="first_name" class="form-control" value="">
@@ -45,36 +49,7 @@
                             <input type="text" value="{{ $data->phonenumber }}" name="phonenumber" class="form-control" value="">
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="lable-control">Age</label>
-                                    <input value="{{ $data->age }}" type="text" name="age" class="form-control" value="">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="lable-control">Height</label>
-                                    <input value="{{ $data->height }}" type="text" name="height" class="form-control" value="">
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-                            <label class="lable-control">Address</label>
-                            <input value="{{ $data->address }}" type="text" name="address" class="form-control" value="">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="lable-control">Choose Your Gender</label>
-                            <select name="gender" class="form-control">
-                                <option @if($data->gender == 'Male') selected @endif value="Male">Male</option>
-                                <option @if($data->gender == 'Female') selected @endif value="Female">Female</option>
-                                <option @if($data->gender == 'Prefer not to answer') selected @endif value="Prefer not to answer">Prefer not to answer</option>
-                            </select>
-                        </div>
+                        
                         <div class="form-group">
                             <button class="btn btn-primary">Update Information</button>
                         </div>

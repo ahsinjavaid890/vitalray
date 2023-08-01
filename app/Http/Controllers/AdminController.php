@@ -6,7 +6,7 @@ use App\Models\modules;
 use App\Models\freequencies;
 use App\Models\user;
 use App\Models\allbanners;
-use App\Models\allbrands;
+use App\Models\dynamicpages;
 use App\Models\roles;
 use App\Models\warehousees;
 use App\Models\Coupon;

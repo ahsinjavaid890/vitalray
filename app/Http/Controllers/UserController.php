@@ -65,17 +65,10 @@ class UserController extends Controller
         return view('frontend.user.aboutinfo')->with(array('data'=>$data));
     }
     
-    public function changeprofilephoto(Request $request)
+    public function freequencydetail($id , $url)
     {
-        $this->validate($request, [
-            'profilephoto' => 'required',
-        ]);
-        $image =  Cmf::sendimagetodirectory($request->profilephoto);
-        $user = user::find(Auth::user()->id);
-        $user->profileimage = $image;
-        $user->save();
-        Cmf::save_media_image($image  , 'profileimage',Auth::user()->id);
-        return redirect()->back()->with('message', 'Media Image Updated Successfully');
+        $data = freequencies::orderby('id' , 'desc')->where('id' , $id)->first();
+        return view('frontend.user.frequenciesdetail')->with(array('data'=>$data));
     }
     public function generalsettings()
     {
@@ -105,105 +98,7 @@ class UserController extends Controller
         $array = array('read_status'=>0);
         $data = DB::table('usernotifications')->where('id' , $id)->update($array);
     }
-    public function allnotifications()
-    {
-        $notification = usernotifications::where('user_id' , Auth::user()->id)->where('read_status' , 1)->orderby('id' , 'desc')->get();
-
-        $data = array('read_status' => 0);
-        
-
-        if($notification->count() > 0)
-        {
-
-            foreach ($notification as $r) {
-                echo '<a onclick="changenotistatus('.$r->id.')" href="'.$r->url.'" class="media">
-                    <div class="media-body">';
-                        if($r->name)
-                        {
-                            echo '<h6 class="item-title">'.$r->name.'</h6>';
-                        }
-                        
-                        echo '<div class="item-time">'.$r->created_at->diffForHumans().'</div>
-                        <p>'.$r->notification.'</p>
-                    </div>
-                </a>';
-            }
-
-
-        }else{
-            echo '<div class="media">
-                    <div class="media-body">
-                        <h6 class="item-title">No New Notifications</h6>
-                    </div>
-                </div>';
-        }
-    }
-
-
-    public function getfriendrequest()
-    {
-        $user1 = User::find(Auth::user()->id);
-        $data = $user1->getFriendRequests();
-        if($data->count() > 0)
-        {
-            foreach ($data as $r) {
-                $userrequest = user::find($r->sender_id);
-                $mutualfriendcount  = $user1->getMutualFriendsCount($userrequest);
-                echo '<div class="media">
-                    <div class="item-img">';
-                    if($userrequest->profileimage)
-                    {
-                        echo '<img src="'.asset("public/images").'/'.$userrequest->profileimage.'" alt="Notify">';
-                    }else{
-                        echo '<img src="'.asset("front/media/profileavatar.png").'" alt="Notify">';
-                    }
-                        
-                    echo '<span class="chat-status'; if($userrequest->online == 1) {echo " online";}else{echo ' ofline';} echo ' "></span>
-                    </div>
-                    <div class="media-body">
-                        <h6 class="item-title"><a href="'.url('profile').'/'.$userrequest->username.'">'.$userrequest->name.'</a></h6>';
-                        if($mutualfriendcount > 0)
-                        {
-                            echo '<p>'.$mutualfriendcount.' in Mutual Friends</p>';
-                        }else{
-                            echo "<p>No Mutual Friends</p>";
-                        }
-                        echo '<div class="btn-area">
-                            <a href="'.url('profile/acceptreuqqest/').'/'.$userrequest->id.'" class="item-btn"><i class="icofont-plus"></i></a>
-                            <a href="'.url('profile/rejectreuqqest/').'/'.$userrequest->id.'" class="item-btn"><i class="icofont-minus"></i></a>
-                        </div>
-                    </div>
-                </div>';
-            }
-        }else{
-            echo '<div class="media">
-                    <div class="media-body">
-                        <h6 class="item-title">No Firned Requests</h6>
-                    </div>
-                </div>';
-        }
-        
-    }
-
-    public function chat_starts_with($id)
-    {
-        $data = user::find(Auth::user()->id);
-        $data->chat_starts_with = $id;
-        $data->save();
-    }
-    public function closchat()
-    {
-        $data = user::find(Auth::user()->id);
-        $data->chat_starts_with = 0;
-        $data->save();
-    }
-    public function acceptreuqqest($id)
-    {
-        $user1 = User::find(Auth::user()->id);
-        $user2 = User::find($id);
-        $user1->acceptFriendRequest($user2);
-        return redirect()->back()->with('message', 'Request Accepted Successfully');
-    }
+    
 
 
     public function securetycredentials(Request $request)
@@ -243,13 +138,13 @@ class UserController extends Controller
     public function updategeneraldetails(Request $request)
     {
         $user = user::find(Auth::user()->id);
+        if($request->profileimage)
+        {
+            $user->profileimage = Cmf::sendimagetodirectory($request->profileimage);    
+        }
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->phonenumber = $request->phonenumber;
-        $user->age = $request->age;
-        $user->height = $request->height;
-        $user->address = $request->address;
-        $user->gender = $request->gender;
         $user->save();
         return redirect()->back()->with('message', ''.$request->name.' Your Profile Updated Successfully');
     }

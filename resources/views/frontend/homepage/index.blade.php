@@ -19,6 +19,12 @@
 	<a class="btn btn-primary" href="{{ url('signin') }}">Sign In</a>
 	<a class="btn btn-primary" href="{{ url('signup') }}">Sign Up</a>
 	@endif
+
+
+
+	@foreach(DB::table('dynamicpages')->where('visible_status' , 'Published')->get() as $r)
+	<a class="btn btn-primary" href="{{ url('page') }}/{{ $r->slug }}">{{ $r->name }}</a>
+	@endforeach
 </div>
 
 @endsection
