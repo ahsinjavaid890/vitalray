@@ -15,85 +15,94 @@
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<!-- <div id="preloader"></div> -->
-<div id="wrapper" class="wrapper overflow-hidden">
-    <div class="login-page-wrap">
-        <div class="content-wrap">
-            <div class="login-content">
-                <div class="item-logo">
-                    <a href="{{ url('') }}"><img width="130" src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png" alt="logo"></a>
-                </div>
-                <div class="login-form-wrap">
-                    <div class="tab-content">
-                        
-                        <div class="tab-pane login-tab fade show active" id="login-tab" role="tabpanel">
-                            <h3 class="item-title">Welcome Back</h3>
-                            @if(session()->has('activeerror'))
+<section class="h-100 gradient-form background-radial-gradient overflow-hidden">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-10">
+        <div class="card rounded-5 text-black">
+          <div class="row g-0">
+            <div class="col-lg-6 login-left-section">
+              <div class="card-body p-md-5 mx-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                         @if(session()->has('activeerror'))
                             <div style="text-align: center;color: red;" id="result">{{ session()->get('activeerror') }}</div>
-                            @endif
-                            <div class="row">
-                               <div class="col-md-6">
-                                   <div class="google-signin">
-                                        <a href="{{ url('auth/google') }}"><img src="{{ asset('public/front/media/figure/google-icon.png') }}" alt="Google">Google Sign in</a>
-                                    </div>
-                               </div> 
-                               <div class="col-md-6">
-                                   <div class="google-signin">
-                                        <a href="{{ url('auth/facebook') }}"><img src="{{ asset('public/front/media/figure/facebook.png') }}" alt="Google">Facebook Sign in</a>
-                                    </div>
-                               </div> 
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-md-12 text-center">
-                                    <span>Or</span>
-                                </div>
-                            </div>
-                            
-
-                             
-                            <form id="loginform" action="{{ route('user.login') }}" method="POST" id="form">
-                                @csrf
-                                <div class="mt-2 mb-3 alert alert-danger print-error-msg-login" style="max-width: 70rem; margin: auto;display:none; color: #a94442;background-color: #f2dede;border-color: #ebccd1;">
-                                    <ul style="text-transform:capitalize;"></ul>
-                                </div>
-                                <div class="form-group">
-                                    <input id="email" autocomplete="off" value="@if(session()->has('email')){{ session()->get('email') }}  @endif" type="text" class="form-control" name="email" placeholder="Your E-mail">
-                                    @if($errors->has('email'))
-                                        <div style="color: red">{{ $errors->first('email') }}</div>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" name="password" placeholder="Password">
-                                    @if($errors->has('password'))
-                                        <div style="color: red">{{ $errors->first('password') }}</div>
-                                    @endif
-                                </div>
-                                <div class="form-group reset-password">
-                                    <a href="{{url('forgot-password')}}">* Reset Password</a>
-                                </div>
-                                <div class="form-group mb-4">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="validationFormCheck2">
-                                        <label class="form-check-label" for="validationFormCheck2">Keep me as signed in</label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <button id="submit-button-login" type="submit" name="login-btn" class="submit-btn" >Login To Account <i class="fa fa-arrow-right icon ml-1"></i></button>
-                                </div>
-                            </form>
-                            <div class="row mt-2">
-                                <div class="col-md-12 text-center">
-                                    <a href="{{ url('signup') }}">Create New Account</a>
-                                </div>
-                            </div>
-                        </div>
+                         @endif
                     </div>
                 </div>
+                <div class="text-left">
+                  <!-- <img class="mb-5" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
+                    style="width: 185px;" alt="logo"> -->
+                  <h4 class="mt-1 mb-1 pb-1">Welcome Back,</h4>
+                  <p>Enter your details and login</p>
+                </div>
 
+                <div class="row mt-4">
+                   <div class="col-md-6">
+                        <a href="{{ url('auth/google') }}" class="btn btn-default d-flex align-items-center justify-content-center">
+                            <img src="{{ asset('public/front/media/figure/google-icon.png') }}" class="me-2" alt="Google">Google
+                          </a>
+                   </div> 
+                   <div class="col-md-6">
+                       <a href="{{ url('auth/facebook') }}" class="btn btn-default d-flex align-items-center justify-content-center">
+                           <img src="{{ asset('public/front/media/figure/facebook.png') }}" class="me-2" alt="Facebook">Facebook
+                        </a>
+                   </div> 
+                </div>
+
+                <form class="mt-4" id="loginform" action="{{ route('user.login') }}" method="POST" id="form">
+                    @csrf
+                    <div class="mt-2 mb-3 alert alert-danger print-error-msg-login" style="list-style:noen;display:none; color: #a94442;background-color: #f2dede;border-color: #ebccd1;">
+                        <ul style="text-transform:capitalize;"></ul>
+                    </div>
+
+                    <div class="form-outline form-black mb-4">
+                        <input id="email" autocomplete="off" value="@if(session()->has('email')){{ session()->get('email') }}  @endif" type="text" class="form-control form-control-lg" name="email" placeholder="Your E-mail">
+                        <label class="form-label" for="email">Email</label>
+                        @if($errors->has('email'))
+                            <div style="color: red">{{ $errors->first('email') }}</div>
+                        @endif
+                    </div>
+                    <div class="form-outline form-black mb-4">
+                        <input id="password" type="password" class="form-control form-control-lg" name="password" placeholder="Password">
+                        <label class="form-label" for="password">Password</label>
+                        @if($errors->has('password'))
+                            <div style="color: red">{{ $errors->first('password') }}</div>
+                        @endif
+                    </div>
+
+                  <div class="text-center pt-1 mb-5 pb-1">
+                    <button id="submit-button-login" type="submit" name="login-btn" class="btn primary-button btn-block mb-3" type="button">Log
+                      in</button>
+
+                      
+                    <a class="text-muted" href="{{url('forgot-password')}}">Forgot password?</a>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-center pb-4">
+                    <p class="mb-0 me-2">Don't have an account?</p>
+                    <a href="{{ url('signup') }}" class="text-primary">Signup</a>
+                  </div>
+
+                </form>
+
+              </div>
             </div>
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2 login-right-section">
+              <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                <img src="{{ asset('public/front/media/login-sidebar.png')}}" style="width: 221px; height: 282px;" class="mb-3">
+                <h4 class="mb-2">Enhance your listing by Listening Frequencies</h4>
+                <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et</p>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
+</section>
+
 <script type="text/javascript">
     $('#loginform').on('submit',(function(e) {
     $('#submit-button-login').html('<i style="font-size:22px;" class="fa fa-spin fa-spinner"></i>');
@@ -115,7 +124,7 @@
                 $(".print-error-msg-login").find("ul").html('');
                 $(".print-error-msg-login").css('display','block');
                 $(".print-error-msg-login").find("ul").append('<li>'+value+' <a href="{{ url("contactus") }}">Contact US</a></li>');
-                $('#submit-button-login').html('Login To Account <i class="fa fa-arrow-right icon ml-1"></i>');
+                $('#submit-button-login').html('Login ');
             }
             if(data == 2)
             {
@@ -127,10 +136,10 @@
                 $(".print-error-msg-login").find("ul").html('');
                 $(".print-error-msg-login").css('display','block');
                 $(".print-error-msg-login").find("ul").append('<li>'+value+'</li>');
-                $('#submit-button-login').html('Login To Account <i class="la la-arrow-right icon ml-1"></i>');
+                $('#submit-button-login').html('Login');
             }
         }else{
-            $('#submit-button-login').html('Login To Account <i class="fa fa-arrow-right icon ml-1"></i>');
+            $('#submit-button-login').html('Login');
             printErrorMsglogin(data.error);
         }
             
