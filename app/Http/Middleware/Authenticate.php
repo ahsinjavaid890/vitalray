@@ -1,11 +1,9 @@
 <?php
 
 namespace App\Http\Middleware;
-use Closure;
-use Illuminate\Http\Request;
+
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use Auth;
-use Redirect;
+
 class Authenticate extends Middleware
 {
     /**
@@ -14,19 +12,14 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    public function handle($request, Closure $next)
+    protected function redirectTo($request)
     {   
-
-        if(Auth::check()){
-            if(Auth::user()->email_verify == 1)
-            {
-                return $next($request);    
-            }else{
-                $url = url('verifyemail');
-                return Redirect::to($url);
+        if ($request->is('vendor') || $request->is('vendor/*')) {
+                return route('vendor.logout');
             }
-        }else{
-            return route('user.signin');
+
+        if (! $request->expectsJson()) {
+            return route('admin.login');
         }
     }
 }

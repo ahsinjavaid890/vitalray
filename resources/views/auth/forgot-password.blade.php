@@ -14,62 +14,68 @@
 @endsection
 @section('content')
 <!-- <div id="preloader"></div> -->
-<div id="wrapper" class="wrapper overflow-hidden">
-    <div class="login-page-wrap">
-        <div class="content-wrap">
-            <div class="login-content">
-                <div class="item-logo">
-                    <a href="{{ url('') }}"><img width="130" src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png" alt="logo"></a>
+<section class="h-100 gradient-form background-radial-gradient overflow-hidden">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-10">
+        <div class="card rounded-5 text-black">
+          <div class="row g-0">
+            <div class="col-lg-6 login-left-section">
+              <div class="card-body p-md-5 mx-md-4">
+                <div class="text-left">
+                  <!-- <img class="mb-5" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
+                    style="width: 185px;" alt="logo"> -->
+                  <h4 class="mt-1 mb-1 pb-1">Forgot your password ?</h4>
+                  <p>Don't worry we'll handle this for you, Please enter your email address and we'll send you a link</p>
                 </div>
-                <div class="login-form-wrap">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link"  href="{{ url('signin') }}"><i class="icofont-users-alt-4"></i> Sign In </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"  href="{{ url('signup') }}"><i class="icofont-download"></i> Registration</a>
-                        </li>
-                    </ul>
-                    <div style="min-height: 400px;" class="tab-content">
-                        <div class="tab-pane login-tab fade show active" id="login-tab" role="tabpanel">
-                            <h3 class="item-title">Forgot your Password</h3>
-                            @if(session()->has('activeerror'))
-                            <div style="text-align: center;color: red;" id="result">{{ session()->get('activeerror') }}</div>
-                            @endif
-                            
-                            @if(session()->has('error'))
-                                <div style="text-align: center;color: red;" id="result">{{ session()->get('error') }}</div>
-                             @endif
 
-                             
-                            <form action="{{ route('forget.password.post') }}" method="POST" id="form">
-                                @csrf
-                                <div class="form-group">
-                                    <input id="email" autocomplete="off" value="@if(session()->has('email')){{ session()->get('email') }}  @endif" type="text" class="form-control" name="email" placeholder="Your E-mail">
-                                    @if($errors->has('email'))
-                                        <div style="color: red">{{ $errors->first('email') }}</div>
-                                    @endif
-                                </div>
-                                
-                                <div class="form-group">
-                                    <input type="submit" name="login-btn" class="submit-btn" value="Forgot Your Password">
-                                </div>
-                            </form>
-                        </div>
+                <div class="row mt-4">
+                   <div class="col-md-12">
+                        @if(session()->has('activeerror'))
+                        <small style="text-align: center;color: white;" id="result">{{ session()->get('activeerror') }}</small>
+                        @endif
+                        
+                        @if(session()->has('error'))
+                            <small style="text-align: center;color: white;" id="result">{{ session()->get('error') }}</small>
+                         @endif
+                   </div> 
+                </div>
+
+                <form class="mt-4" action="{{ route('forget.password.post') }}" method="POST" id="form">
+                    @csrf
+                    <div class="form-outline form-black mb-4">
+                        <input id="email" autocomplete="off" value="@if(session()->has('email')){{ session()->get('email') }}  @endif" type="text" class="form-control form-control-lg" name="email" placeholder="Your E-mail">
+                        <label class="form-label" for="email">Email</label>
+                        @if($errors->has('email'))
+                        <div style="color: red">{{ $errors->first('email') }}</div>
+                        @endif
                     </div>
-                </div>
 
+                  <div class="text-center pt-1 mb-5 pb-1">
+                    <button type="submit" name="login-btn" class="btn primary-button btn-block mb-3" type="button">Send Link</button>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-center pb-4">
+                    <p class="mb-0 me-2">Already have an account?</p>
+                    <a href="{{ url('signin') }}" class="text-primary">Login</a>
+                  </div>
+
+                </form>
+
+              </div>
             </div>
-            <div class="map-line">
-                    <img src="{{ asset('public/front/media/banner/map_line2.png') }}" alt="map">
-                    <ul class="map-marker">
-                        <li><img src="{{ asset('public/front/media/banner/marker_1.png') }}" alt="marker"></li>
-                        <li><img src="{{ asset('public/front/media/banner/marker_2.png') }}" alt="marker"></li>
-                        <li><img src="{{ asset('public/front/media/banner/marker_3.png') }}" alt="marker"></li>
-                        <li><img src="{{ asset('public/front/media/banner/marker_4.png') }}" alt="marker"></li>
-                    </ul>
-                </div>
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2 login-right-section">
+              <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                <img src="{{ asset('public/front/media/login-sidebar.png')}}" style="width: 221px; height: 282px;" class="mb-3">
+                <h4 class="mb-2">Enhance your listing by Listening Frequencies</h4>
+                <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et</p>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
+</section>
 @endsection

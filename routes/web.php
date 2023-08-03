@@ -57,6 +57,7 @@ Route::get('auth/facebook/callback', [SocialiteController::class, 'facebookSigni
 
 
 // Customer Auth
+Route::get('/login', [AuthUserController::class, 'signin'])->name('login');
 Route::get('/signin', [AuthUserController::class, 'signin'])->name('user.signin');
 Route::get('/signup', [AuthUserController::class, 'signup'])->name('user.signup');
 Route::get('/steptwo', [AuthUserController::class, 'steptwo'])->name('user.steptwo');
