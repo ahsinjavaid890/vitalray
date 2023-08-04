@@ -3,50 +3,59 @@
 <title>Plans</title>
 @endsection
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Frequencies:</div>
- 
-                <div class="card-body">
- 
-                    <div style="background-color: #ddd;padding: 10px;border-radius: 10px;color: black;" class="row mb-3">
-                        <div class="col-md-2">
-                            <a href="{{ url('profile/frequency') }}/{{ $data->id }}/{{ $data->slug }}">
-                                <img class="img-thumbnail" width="100" src="{{ url('public/images') }}/{{ $data->image }}">
-                            </a>
-                        </div>
-                        <div class="col-md-10">
-                            <div class="mp3-player">
-                              <audio id="myAudio" class="form-control" controls>
-                                <source src="{{ url('public/images') }}/{{ $data->freequency }}" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                              </audio>
+<section class="gradient-form background-radial-gradient">
+    @include('includes.sidebar')
+
+    <div class="col-md-9 col-lg-10 ml-md-auto px-0 ms-md-auto">
+      <!-- main content -->
+      <main class="p-4 min-vh-100" style="overflow-y:auto !important; height: 100vh;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="d-flex flex-column text-center">
+                                    <div>
+                                        <img class="img-thumbnail" style="width:100%; height: 300px" src="{{ url('public/images') }}/{{ $data->image }}">
+                                    </div>
+                                    <div>
+                                        <h4 class="mt-3">{{ $data->name }}</h4>
+                                    </div>
+                                    <div>
+                                        <div class="mp3-player">
+                                          <audio id="myAudio" class="form-control" controls>
+                                            <source src="{{ url('public/images') }}/{{ $data->freequency }}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                          </audio>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column mt-2">
+                                    <div class="">
+                                        <label>vibration</label>
+                                        <div><b>{{ $data->vibration }}</b></div>
+                                    </div>
+                                    <div>
+                                        <label>emitter</label>
+                                        <div><b>{{ $data->emitter }}</b></div>
+                                    </div>
+                                    <div>
+                                        <label>description</label>
+                                        <div><b>{{ $data->description }}</b></div>
+                                    </div>
+                                </div>
+                              </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Name</label>
-                            <div><b>{{ $data->name }}</b></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label>vibration</label>
-                            <div><b>{{ $data->vibration }}</b></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label>emitter</label>
-                            <div><b>{{ $data->emitter }}</b></div>
-                        </div>
-                        <div class="col-md-12">
-                            <label>description</label>
-                            <div><b>{{ $data->description }}</b></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+      </main>
     </div>
-</div>
+</section>
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">

@@ -11,13 +11,13 @@
         <div class="card rounded-5 text-black">
           <div class="row g-0">
             <div class="col-lg-6 login-left-section">
-              <div class="card-body p-md-5 mx-md-4">
+              <div class="card-body p-md-4 mx-md-4">
                 
                 <div class="text-left">
-                  <!-- <img class="mb-5" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
-                    style="width: 185px;" alt="logo"> -->
-                  <h4 class="mt-1 mb-1 pb-1">Welcome Back,</h4>
-                  <p>Enter your details and login</p>
+                  <img class="mb-2" src="{{ asset('public/front/media/logo.png') }}"
+                    style="width: 105px;" alt="logo">
+                  <h4 class="mt-1 mb-1 pb-1">Create an Account</h4>
+                  <p>Crate your account by filling the below details</p>
                 </div>
 
                 <div class="row mt-4">

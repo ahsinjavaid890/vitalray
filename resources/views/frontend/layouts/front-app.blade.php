@@ -30,9 +30,7 @@
     </a>
     <!-- <div id="preloader"></div> -->
     <div id="wrapper" class="wrapper overflow-hidden">
-        @include('includes.front-header-home')
             @yield('content')
-        @include('includes.front-footer')
     </div>
 </body>
 

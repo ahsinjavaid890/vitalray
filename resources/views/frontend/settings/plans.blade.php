@@ -4,15 +4,27 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Select Plane:</div>
- 
-                <div class="card-body">
- 
-                    <div class="row">
+<section class="gradient-form background-radial-gradient">
+    @include('includes.sidebar')
+
+    <div class="col-md-9 col-lg-10 ml-md-auto px-0 ms-md-auto">
+      <!-- main content -->
+      <main class="p-4 min-vh-100" style="overflow-y:auto !important; height: 100vh;">
+        <div class="container">
+          <div class="row section-header">
+            <div class="col-md-12">
+              <h3>Profile Settings</h3>
+              <p>Update your personal and security Information</p>
+            </div>
+          </div>
+            <div class="row">
+                @include('includes.profile-sidebar')
+                <div class="col-md-8">
+                  <div class="card">
+                    <div class="card-body">
+                        <h4>Your Plan</h4>
+
+                        <div class="row">
                         @foreach($plans as $plan)
                             <div class="col-md-6">
                                 <div class="card mb-3">
@@ -35,10 +47,13 @@
                             </div>
                         @endforeach
                     </div>
-  
+
+                      </div>
+                   </div>
                 </div>
             </div>
-        </div>
+          </div>
+      </main>
     </div>
-</div>
+</section>
 @endsection

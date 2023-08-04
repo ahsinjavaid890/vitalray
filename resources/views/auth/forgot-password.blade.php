@@ -21,10 +21,10 @@
         <div class="card rounded-5 text-black">
           <div class="row g-0">
             <div class="col-lg-6 login-left-section">
-              <div class="card-body p-md-5 mx-md-4">
+              <div class="card-body p-md-4 mx-md-4">
                 <div class="text-left">
-                  <!-- <img class="mb-5" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
-                    style="width: 185px;" alt="logo"> -->
+                  <img class="mb-2" src="{{ asset('public/front/media/logo.png') }}"
+                    style="width: 105px;" alt="logo">
                   <h4 class="mt-1 mb-1 pb-1">Forgot your password ?</h4>
                   <p>Don't worry we'll handle this for you, Please enter your email address and we'll send you a link</p>
                 </div>
@@ -51,7 +51,7 @@
                         @endif
                     </div>
 
-                  <div class="text-center pt-1 mb-5 pb-1">
+                  <div class="text-center pt-1 mb-2 pb-1">
                     <button type="submit" name="login-btn" class="btn primary-button btn-block mb-3" type="button">Send Link</button>
                   </div>
 
