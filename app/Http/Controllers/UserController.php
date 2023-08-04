@@ -35,7 +35,8 @@ class UserController extends Controller
                 $checksubscription = Cmf::checkstatusstripesubscription();
                 if($checksubscription == 'active')
                 {
-                    return view('frontend.user.profile');
+                    $data = freequencies::orderby('id' , 'desc')->paginate(10);
+                    return view('frontend.user.home')->with(array('data'=>$data));
                 }else{
                     $url = url('plans');
                     return Redirect::to($url);
@@ -48,7 +49,8 @@ class UserController extends Controller
                 $checksubscription = Cmf::checksubscriptionpaypal();
                 if($checksubscription == 'active')
                 {
-                    return view('frontend.user.profile');
+                    $data = freequencies::orderby('id' , 'desc')->paginate(10);
+                    return view('frontend.user.home')->with(array('data'=>$data));
                 }else{
                     $url = url('plans');
                     return Redirect::to($url);

@@ -1,7 +1,7 @@
 @extends('frontend.layouts.front-app-home')
 
 @section('meta-tags')
-<title>General Settings | {{ $data->name }}</title>
+<title>Personal Information</title>
 @endsection
 @section('content')
 @include('admin.alerts')
@@ -28,7 +28,7 @@
                             {{ csrf_field() }}
                             <div class="mt-3">
                                 <div class="form-outline form-black mb-4">
-                                    <input type="file"  name="profileimage" class="form-control form-control-lg" >
+                                    <input accept="image/png, image/gif, image/jpeg"  type="file"  name="profileimage" class="form-control form-control-lg" >
                                     <label class="form-label">Profile Image</label>
                                 </div>
 

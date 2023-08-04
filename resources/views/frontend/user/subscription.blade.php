@@ -1,6 +1,6 @@
 @extends('frontend.layouts.front-app-home')
 @section('meta-tags')
-<title>Subscription</title>
+<title>Checkout</title>
 @endsection
 
 @section('content')

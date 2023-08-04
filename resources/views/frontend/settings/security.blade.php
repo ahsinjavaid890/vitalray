@@ -1,7 +1,7 @@
 @extends('frontend.layouts.front-app-home')
 
 @section('meta-tags')
-<title>Security Settings | {{ $data->name }}</title>
+<title>Change Password</title>
 @endsection
 @section('content')
     <section class="gradient-form background-radial-gradient">

@@ -9,19 +9,15 @@
       </h1>
       <div class="list-group rounded-0">
         <small style="padding:10px 25px; opacity: 0.5;">Menu</small>
-        <a href="{{ url('dashboard/') }}" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
+        <a href="{{ url('profile/dashboard') }}" class="list-group-item list-group-item-action border-0 d-flex align-items-center @if(request()->segment(count(request()->segments())) == 'dashboard') active @endif">
           <span class="bi bi-border-all"></span>
           <span class="ml-2"> <img src="{{ asset('public/front/media/home-icon.svg') }}" class="me-2" alt="Home"> Home</span>
         </a>
-        <a href="{{ url('profile/frequencies') }}" class="list-group-item list-group-item-action border-0 align-items-center">
+        <a href="{{ url('profile/frequencies') }}" class="list-group-item list-group-item-action border-0 align-items-center @if(request()->segment(count(request()->segments())) == 'frequencies') active @endif">
           <span class="bi bi-box"></span>
           <span class="ml-2"><img src="{{ asset('public/front/media/frequencies-list-icon.svg') }}" class="me-2" alt="Home"> Frequencies List</span>
         </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-box"></span>
-          <span class="ml-2"><img src="{{ asset('public/front/media/create-frequency-icon.svg') }}" class="me-2" alt="Home"> Create Frequency</span>
-        </a>
-        <a href="{{ url('profile') }}" class="list-group-item list-group-item-action border-0 align-items-center">
+        <a href="{{ url('profile/settings') }}" class="list-group-item list-group-item-action border-0 align-items-center @if(request()->segment(count(request()->segments())) == 'settings') active @endif @if(request()->segment(count(request()->segments())) == 'changepassword') active @endif @if(request()->segment(count(request()->segments())) == 'plans') active @endif">
           <span class="bi bi-box"></span>
           <span class="ml-2"><img src="{{ asset('public/front/media/settings-icon.svg') }}" class="me-2" alt="Home"> Settings</span>
         </a>

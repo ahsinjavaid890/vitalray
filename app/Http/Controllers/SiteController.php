@@ -140,10 +140,7 @@ class SiteController extends Controller
         {
             return redirect()->route('userprofile');
         }else{
-            $url = url('');
-            session()->put('redirecturl', $this->currenturl());
-            $blogs = DB::table('blogs')->where('delete_status' , 'Active')->where('visible_status' , 'Published')->limit(3)->get();
-            return view('frontend.homepage.index')->with(array('blogs'=>$blogs));
+            return redirect()->route('userprofile');
         }
     }
 

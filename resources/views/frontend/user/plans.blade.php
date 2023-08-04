@@ -4,6 +4,14 @@
 @endsection
 
 @section('content')
+<style type="text/css">
+  .card-title{
+    position: unset;
+  }
+  .card-text{
+    position: unset;
+  }
+</style>
 <section class="h-100 gradient-form background-radial-gradient overflow-hidden">
   <div class="container py-4 h-90">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -23,8 +31,13 @@
                           <div class="card-body">
                             <h5 class="card-title">{{ $plan->name }}</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            <h2 class="card-price">${{ $plan->price }}<span class="card-duration">/{{ $plan->no_of_days }}</span></h2>
-                            <a href="{{ route('plans.show', $plan->slug) }}" class="btn primary-button btn-sm pull-right btn-block">Purchase Plan</a>
+                            <h2 class="card-price">${{ $plan->price }}
+                              <span class="card-duration">/{{ $plan->no_of_days }}</span>
+                            </h2>
+                            <div class="mt-4">
+                              <a href="{{ route('plans.show', $plan->slug) }}" class="btn primary-button btn-sm pull-right btn-block">Purchase Plan</a>   
+                            </div>
+                            
                           </div>
                         </div>
                       </div>

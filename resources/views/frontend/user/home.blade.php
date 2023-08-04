@@ -9,49 +9,7 @@
     <div id="sidebar-overlay" class="overlay w-100 vh-100 position-fixed d-none"></div>
 
     <!-- sidebar -->
-    <div class="col-md-3 col-lg-2 px-0 position-fixed shadow-sm sidebar" id="sidebar">
-      <h1 class="bi bi-bootstrap text-primary d-flex my-4 justify-content-center">Logo</h1>
-      <div class="list-group rounded-0">
-        <a href="#" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
-          <span class="bi bi-border-all"></span>
-          <span class="ml-2"> <img src="{{ asset('public/front/media/home-icon.svg') }}" class="me-2" alt="Home"> Home</span>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-box"></span>
-          <span class="ml-2"><img src="{{ asset('public/front/media/frequencies-list-icon.svg') }}" class="me-2" alt="Home"> Frequencies List</span>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-box"></span>
-          <span class="ml-2"><img src="{{ asset('public/front/media/create-frequency-icon.svg') }}" class="me-2" alt="Home"> Create Frequency</span>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-box"></span>
-          <span class="ml-2"><img src="{{ asset('public/front/media/settings-icon.svg') }}" class="me-2" alt="Home"> Settings</span>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-box"></span>
-          <span class="ml-2"><img src="{{ asset('public/front/media/logout.svg') }}" class="me-2" alt="Home"> Logout</span>
-        </a>
-
-        <a href="#" class=" border-0 align-items-center">
-          <hr>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-question-circle"></span>
-          <span class="ml-2">About App</span>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-person"></span>
-          <span class="ml-2">Privacy Policy</span>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-          <span class="bi bi-person"></span>
-          <span class="ml-2">Terms & Conditions</span>
-        </a>
-
-        
-      </div>
-    </div>
+    @include('includes.sidebar')
 
     <div class="col-md-9 col-lg-10 ml-md-auto px-0 ms-md-auto">
       <!-- main content -->
