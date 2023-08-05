@@ -59,27 +59,7 @@
                             <label for="validationCustom01">Detailed Content</label>
                             <textarea id="summernote-basic" required="" name="content" class="form-control" rows="8">{{ $data->content }}</textarea>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="show_on_footer">Show on Footer</label>
-                            <select required="" id="show_on_footer" class="form-control" name="show_on_footer">
-                                <option value="">Select</option>
-                                <option @if($data->show_on_footer == 'Yes') selected @endif value="Yes">Yes</option>
-                                <option @if($data->show_on_footer == 'No') selected @endif value="No">No</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="show_bellow">Show Bellow</label>
-                            <select required="" id="show_bellow" class="form-control" name="show_bellow">
-                                <option value="">Select</option>
-                                <option @if($data->show_bellow == 'Help') selected @endif value="Help">Help</option>
-                                <option @if($data->show_bellow == 'Guideline') selected @endif value="Guideline">Guideline</option>
-                                <option @if($data->show_bellow == 'Policy') selected @endif value="Policy">Policy</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="visible_order">Visible Order</label>
-                            <input class="form-control" type="text" value="{{ $data->visible_order }}" name="visible_order" id="visible_order">
-                        </div>
+                        
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div>

@@ -35,8 +35,8 @@ return [
         'redirect' => 'http://localhost/vitalray/auth/google/callback',
     ],
     'facebook' => [
-        'client_id' => '281506560540781',
-        'client_secret' => '3605e867420aa6c5f642a2e2c4705297',
+        'client_id' => '1947330638969389',
+        'client_secret' => 'c12b6ec21c4b727d914548d9457fd68c',
         'redirect' => 'http://localhost/datingproject/auth/facebook/callback',
     ],
     'recaptcha' => [

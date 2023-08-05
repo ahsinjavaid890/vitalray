@@ -61,7 +61,7 @@
                                     <textarea class="form-control" name="description">{{ $data->description }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label class="lable-control">Show On Homepage</label>
+                                    <label class="lable-control">Featured</label>
                                     <select class="form-control" name="show_on_homepage">
                                         <option value="">Select</option>
                                         <option @if($data->show_on_homepage == 'yes') selected @endif value="yes">Yes</option>

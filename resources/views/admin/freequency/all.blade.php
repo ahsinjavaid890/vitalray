@@ -42,7 +42,7 @@
                                             <tr>
                                                 <th>Image</th>
                                                 <th>Name</th>
-                                                <th>Homepage Show</th>
+                                                <th>Featured</th>
                                                 <th>Created At</th>
                                                 <th>Action</th>
                                             </tr>

@@ -60,7 +60,7 @@
                                     <textarea class="form-control" name="description"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label class="lable-control">Show On Homepage</label>
+                                    <label class="lable-control">Is Featured</label>
                                     <select class="form-control" name="show_on_homepage">
                                         <option value="">Select</option>
                                         <option value="yes">Yes</option>

@@ -126,7 +126,13 @@ class AuthUserController extends Controller
 
     public function verifyemail()
     {
-        return view('auth.verifyemail');
+        if(Auth::user()->email_verify == 1)
+        {
+            return redirect()->route('home');
+        }else{
+            return view('auth.verifyemail');
+        }
+        
     }
     public function submiverifyemail(Request $request)
     {

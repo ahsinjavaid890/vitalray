@@ -32,7 +32,7 @@
                             <h5 class="card-title">{{ $plan->name }}</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                             <h2 class="card-price">${{ $plan->price }}
-                              <span class="card-duration">/{{ $plan->no_of_days }}</span>
+                              <span class="card-duration">/{{ $plan->no_of_days }} Days</span>
                             </h2>
                             <div class="mt-4">
                               <a href="{{ route('plans.show', $plan->slug) }}" class="btn primary-button btn-sm pull-right btn-block">Purchase Plan</a>   

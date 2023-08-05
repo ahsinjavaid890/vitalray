@@ -58,23 +58,7 @@
                             <label for="validationCustom01">Detailed Content</label>
                             <textarea required="" id="summernote-basic" name="content" class="form-control" rows="8"></textarea>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="show_on_footer">Show on Footer</label>
-                            <select required="" id="show_on_footer" class="form-control" name="show_on_footer">
-                                <option value="">Select</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="show_bellow">Show Bellow</label>
-                            <select required="" id="show_bellow" class="form-control" name="show_bellow">
-                                <option value="">Select</option>
-                                <option value="Help">Help</option>
-                                <option value="Guideline">Guideline</option>
-                                <option value="Policy">Policy</option>
-                            </select>
-                        </div>
+                        
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div>

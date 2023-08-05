@@ -22,71 +22,18 @@
             </div>
           </div>
           <div class="row mb-3">
+            @foreach(DB::table('freequencies')->where('show_on_homepage' , 'yes')->limit(6)->orderby('id' , 'desc')->get() as $r)
               <div class="col-md-2">
                 <div class="card bg-dark text-white card-featured">
-                  <img class="card-img" src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2018/09/1862/1048/adacbcf6-640_brain.jpg?ve=1&tl=1" alt="Card image">
+                  <img class="card-img" src="{{ url('public/images') }}/{{ $r->image }}" alt="Card image">
                   <div class="card-img-overlay">
-                    <a href="#"><img class="play-icon" src="{{ asset('public/front/media/play-icon.png') }}" alt="Play icon"></a>
-                    <p class="card-text">Vibration</p>
-                    <h5 class="card-title"><a href="#">Card title</a></h5>
+                    <a href="{{ url('profile/frequency') }}/{{ $r->id }}/{{ $r->slug }}"><img class="play-icon" src="{{ asset('public/front/media/play-icon.png') }}" alt="Play icon"></a>
+                    <p class="card-text">{{ $r->vibration }}</p>
+                    <h5 class="card-title"><a href="{{ url('profile/frequency') }}/{{ $r->id }}/{{ $r->slug }}">{{ $r->name }}</a></h5>
                   </div>
                 </div>
               </div>
-
-              <div class="col-md-2">
-                <div class="card bg-dark text-white card-featured">
-                  <img class="card-img" src="https://www.heatherbrewster.com/wp-content/uploads/2018/07/vibration-of-love_WEB.jpg" alt="Card image">
-                  <div class="card-img-overlay">
-                    <a href="#"><img class="play-icon" src="{{ asset('public/front/media/play-icon.png') }}" alt="Play icon"></a>
-                    <p class="card-text">Vibration</p>
-                    <h5 class="card-title"><a href="#">Card title</a></h5>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <div class="card bg-dark text-white card-featured">
-                  <img class="card-img" src="https://lisalister.co.nz/wp-content/uploads/2020/09/Lisa-Lister-Healer-Teacher-48.jpg" alt="Card image">
-                  <div class="card-img-overlay">
-                    <a href="#"><img class="play-icon" src="{{ asset('public/front/media/play-icon.png') }}" alt="Play icon"></a>
-                    <p class="card-text">Vibration</p>
-                    <h5 class="card-title"><a href="#">Card title</a></h5>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <div class="card bg-dark text-white card-featured">
-                  <img class="card-img" src="https://media.skilldeer.com/550x450/243914a668d5d45762b894cee1e71e8d3ada69c2.png" alt="Card image">
-                  <div class="card-img-overlay">
-                    <a href="#"><img class="play-icon" src="{{ asset('public/front/media/play-icon.png') }}" alt="Play icon"></a>
-                    <p class="card-text">Vibration</p>
-                    <h5 class="card-title"><a href="#">Card title</a></h5>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <div class="card bg-dark text-white card-featured">
-                  <img class="card-img" src="https://media.skilldeer.com/550x450/243914a668d5d45762b894cee1e71e8d3ada69c2.png" alt="Card image">
-                  <div class="card-img-overlay">
-                    <a href="#"><img class="play-icon" src="{{ asset('public/front/media/play-icon.png') }}" alt="Play icon"></a>
-                    <p class="card-text">Vibration</p>
-                    <h5 class="card-title"><a href="#">Card title</a></h5>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <div class="card bg-dark text-white card-featured">
-                  <img class="card-img" src="https://media.skilldeer.com/550x450/243914a668d5d45762b894cee1e71e8d3ada69c2.png" alt="Card image">
-                  <div class="card-img-overlay">
-                    <a href="#"><img class="play-icon" src="{{ asset('public/front/media/play-icon.png') }}" alt="Play icon"></a>
-                    <p class="card-text">Vibration</p>
-                    <h5 class="card-title"><a href="#">Card title</a></h5>
-                  </div>
-                </div>
-              </div>
+            @endforeach
             </div>
             <div class="row section-header">
               <div class="col-md-12">
