@@ -9,7 +9,7 @@
       </h1>
       <div class="list-group rounded-0">
         <small style="padding:10px 25px; opacity: 0.5;">Menu</small>
-        <a href="{{ url('profile/dashboard') }}" class="list-group-item list-group-item-action border-0 d-flex align-items-center @if(request()->segment(count(request()->segments())) == 'dashboard') active @endif">
+        <a href="{{ url('profile/home') }}" class="list-group-item list-group-item-action border-0 d-flex align-items-center @if(request()->segment(count(request()->segments())) == 'home') active @endif">
           <span class="bi bi-border-all"></span>
           <span class="ml-2"> <img src="{{ asset('public/front/media/home-icon.svg') }}" class="me-2" alt="Home"> Home</span>
         </a>

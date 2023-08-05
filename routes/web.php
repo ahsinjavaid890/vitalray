@@ -87,8 +87,8 @@ Route::get('/resendemail/{id}', [AuthUserController::class, 'resendemail']);
 // Nesfeed
 
 Route::group(['prefix' => 'profile'], function () {
-    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('userprofile');
-    Route::get('/', [UserController::class, 'dashboard'])->name('userprofile');
+    Route::get('/home', [UserController::class, 'dashboard'])->name('userprofile');
+    Route::get('/', [UserController::class, 'dashboard'])->name('useasdasrprofile');
     Route::get('/cancelsubscription', [UserController::class, 'cancelsubscription']);
     Route::get('/settings', [UserController::class, 'generalsettings']);
     Route::POST('/updategeneraldetails', [UserController::class, 'updategeneraldetails']);

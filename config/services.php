@@ -32,7 +32,7 @@ return [
     'google' => [
         'client_id' => '874927845773-r7hb0ngq6eodvhar9rfaq61tiajmt44q.apps.googleusercontent.com',
         'client_secret' => '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',
-        'redirect' => 'http://dev.vitalray.us/auth/google/callback',
+        'redirect' => 'http://localhost/vitalray/auth/google/callback',
     ],
     'facebook' => [
         'client_id' => '281506560540781',

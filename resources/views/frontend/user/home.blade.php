@@ -1,6 +1,6 @@
 @extends('frontend.layouts.front-app-home')
 @section('meta-tags')
-<title>Plans</title>
+<title>Home</title>
 @endsection
 @section('content')
 
