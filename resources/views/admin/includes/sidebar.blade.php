@@ -30,12 +30,12 @@
             </li>
         </ul>
     </li>
-    <!-- <li class="side-nav-item">
-        <a href="{{url('admin/users')}}" class="side-nav-link">
+    <li class="side-nav-item">
+        <a href="{{url('admin/allplans')}}" class="side-nav-link">
             <i class="uil-user"></i>
-            <span> Users </span>
+            <span> Plans </span>
         </a>
-    </li> -->
+    </li>
     <!-- <li class="side-nav-item">
         <a href="javascript:void(0)" class="side-nav-link">
             <i class="uil-cog"></i>

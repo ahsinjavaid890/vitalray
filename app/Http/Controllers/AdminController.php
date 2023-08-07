@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\modules;
 use App\Models\freequencies;
 use App\Models\user;
-use App\Models\allbanners;
+use App\Models\Plan;
 use App\Models\dynamicpages;
 use App\Models\roles;
 use App\Models\warehousees;
@@ -484,23 +484,6 @@ class AdminController extends Controller
         $data = subscriptionplans::where('id' , $id)->get()->first();
         return view('admin.subscriptions.edit.editplan')->with(array('data'=>$data));
     }
-    public function updateplan(Request $request)
-    {
-        $plan = subscriptionplans::find($request->id);
-        $plan->name = $request->name;
-        $plan->places_allowed = $request->places_allowed;
-        $plan->images_allowed = $request->images_allowed;
-        $plan->price = $request->price;
-        $plan->feature1 = $request->feature1;
-        $plan->feature2 = $request->feature2;
-        $plan->feature3 = $request->feature3;
-        $plan->feature4 = $request->feature4;
-        $plan->feature5 = $request->feature5;
-        $plan->feature6 = $request->feature6;
-        $plan->duration = $request->duration;
-        $plan->save();
-        return redirect()->back()->with('message', 'Plan Updated Successfully');
-    }
 
     public function planstatus($id , $two)
     {
@@ -894,17 +877,22 @@ class AdminController extends Controller
 
 
     /****************************************************
-                   Blogs Module
+                   Plan Module
     *****************************************************/
-    public function blogcategories()
+    public function allplans()
     {
-        $data = blogcategories::where('delete_status' ,'Active')->get();
-        return view('admin.blogs.categories')->with(array('data'=>$data,'status'=>'all'));
+        $data = Plan::all();
+        return view('admin.plans.all')->with(array('data'=>$data));
     }
-    public function blogcategoriesbystatus($id)
+    public function updateplan(Request $request)
     {
-        $data = blogcategories::where('delete_status' ,$id)->get();
-        return view('admin.blogs.categories')->with(array('data'=>$data,'status'=>'trash'));
+        $update = Plan::find($request->id);
+        $update->name = $request->name;
+        $update->no_of_days = $request->no_of_days;
+        $update->stripe_plan = $request->stripe_plan;
+        $update->price = $request->price;
+        $update->save();
+        return redirect()->back()->with('message', 'Plan Updated Successfully');
     }
     public function deleteblogcategory($id)
     {

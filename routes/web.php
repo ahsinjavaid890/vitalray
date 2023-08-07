@@ -140,12 +140,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/reviews/all', function () {
         return view('admin.files.reviews.all');
     });
-    Route::get('blog-categories', [AdminController::class, 'blogcategories']);
-    Route::get('blog-categories/{id}', [AdminController::class, 'blogcategoriesbystatus']);
-    Route::get('/deleteblogcategory/{id}', [AdminController::class, 'deleteblogcategory']);
-    Route::get('/deleteblogcategorypermanently/{id}', [AdminController::class, 'deleteblogcategorypermanently']);
+    Route::get('allplans', [AdminController::class, 'allplans']);
+    Route::POST('/updateplan', [AdminController::class, 'updateplan']);
     
-    Route::POST('/socialmedia', [AdminController::class, 'socialmedia']);
+    
+    
     Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admin.dashboard');
     Route::get('/notifications', [AdminController::class, 'notifications']);
     Route::get('/statuschange/{id}', [AdminController::class, 'statuschange']);

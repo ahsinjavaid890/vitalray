@@ -5,10 +5,10 @@
         <!-- LOGO -->
         <a href="{{ url('admin/dashboard') }}" class="topnav-logo">
             <span class="topnav-logo-lg">
-                <img src="{{asset('public/admin/images/logo.png')}}" alt="" height="40">
+                <img src="{{asset('public/front/media/logo.png')}}" alt="" height="40">
             </span>
             <span class="topnav-logo-sm">
-                <img src="{{asset('public/admin/images/logo.png')}}" alt="" height="30">
+                <img src="{{asset('public/front/media/logo.png')}}" alt="" height="30">
             </span>
         </a>
 
