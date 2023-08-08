@@ -176,6 +176,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('edit/{id}', [AdminController::class, 'editproduct']);
         Route::POST('create', [AdminController::class, 'createcountry']);
         Route::POST('updateproduct', [AdminController::class, 'updateproduct']);
+        Route::POST('updategallaryimages', [AdminController::class, 'updategallaryimages']);
+        Route::get('image/delete/{id}', [AdminController::class, 'deletegalleryimage']);
     });
 
     Route::group(['prefix' => 'freequency'], function () { 
