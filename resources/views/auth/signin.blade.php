@@ -1,20 +1,9 @@
 @extends('auth.authlayout')
 @section('title')
 <title>Sign In</title>
-<meta name="DC.Title" content="Sign In">
-<meta name="rating" content="general">
-<meta name="description" content="Sign In">
-<meta property="og:type" content="website">
-<meta property="og:image" content="">
-<meta property="og:title" content="Sign In">
-<meta property="og:description" content="Sign In">
-<meta property="og:site_name" content="Sign In">
-<meta property="og:url" content="{{ url('') }}">
-<meta property="og:locale" content="it_IT">
 @endsection
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 <section class="h-100 gradient-form background-radial-gradient overflow-hidden">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">

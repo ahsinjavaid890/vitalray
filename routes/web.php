@@ -167,12 +167,13 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('contact/view/{id}', [AdminController::class, 'contactview']);
     Route::get('contact/delete/{id}', [AdminController::class, 'deletecontactus']);
 
-    Route::group(['prefix' => 'countries'], function () { 
-        Route::get('/', [AdminController::class, 'allcountries']);
-        Route::get('edit/{id}', [AdminController::class, 'editcountries']);
-        Route::get('delete/{id}', [AdminController::class, 'deletecountries']);
+    Route::group(['prefix' => 'products'], function () { 
+        Route::get('/all', [AdminController::class, 'allproducts']);
+        Route::get('add', [AdminController::class, 'addproduct']);
+        Route::POST('add', [AdminController::class, 'createproduct']);
+        Route::get('edit/{id}', [AdminController::class, 'editproduct']);
         Route::POST('create', [AdminController::class, 'createcountry']);
-        Route::POST('updatecountry', [AdminController::class, 'updatecountry']);
+        Route::POST('updateproduct', [AdminController::class, 'updateproduct']);
     });
 
     Route::group(['prefix' => 'freequency'], function () { 

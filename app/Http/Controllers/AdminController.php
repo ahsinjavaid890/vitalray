@@ -7,8 +7,8 @@ use App\Models\freequencies;
 use App\Models\user;
 use App\Models\Plan;
 use App\Models\dynamicpages;
-use App\Models\roles;
-use App\Models\warehousees;
+use App\Models\products;
+use App\Models\products_images;
 use App\Models\Coupon;
 use App\Models\subscriptionplans;
 use App\Models\StoreSetting;
@@ -153,53 +153,62 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'Freequency Updated Successfully');
     }
 
-    public function allcountries()
+    public function allproducts()
     {
-        $data = DB::table('countries')->where('delete_status' , 'active')->get();
-        return view('admin.countries.all')->with(array('data'=>$data));
+        $data = DB::table('products')->orderby('id' , 'desc')->get();
+        return view('admin.products.all')->with(array('data'=>$data));
     }
-    public function deletecountries($id)
+    public function addproduct()
     {
-       $data = array('delete_status' =>'delete');
-       DB::table('countries')->where('id' , $id)->update($data);
-       DB::table('places')->where('countries' , $id)->update($data);
-       return redirect()->back()->with('message', 'Country Deleted Successfully');
+       return view('admin.products.addproduct');
     }
-    public function createcountry(Request $request)
+    public function createproduct(Request $request)
     {
+        $add = new products();
+        $add->name = $request->name;
+        $add->short_description = $request->short_description;
+        $add->description = $request->description;
+        $add->price = $request->price;
+        $add->image = Cmf::sendimagetodirectory($request->image);
+        $add->document = Cmf::sendimagetodirectory($request->document);
+        $add->save();
 
-       $check  = DB::table('countries')->where('delete_status' , 'active')->where('name' , $request->name)->count();
-       if($check == 0)
-       {
-           $image =  Cmf::sendimagetodirectory($request->image);
-           $data = array('name' =>$request->name ,'image'=>$image,'published_status'=>'published','delete_Status'=>'active');
-           DB::table('countries')->insert($data);
-           return redirect()->back()->with('message', 'Country Added Successfully');
-       }else{
-        return redirect()->back()->with('warning', 'Country Name Already Added');
-       }
-    }
-
-    public function updatecountry(Request $request)
-    {
-        if(!empty($request->image))
+        if($request->gallaryimages)
         {
-           $image =  Cmf::sendimagetodirectory($request->image);
-           $data = array('name' =>$request->name ,'image'=>$image,'published_status'=>$request->status);
-           DB::table('countries')->where('id' , $request->id)->update($data);
-           return redirect()->back()->with('message', 'Country Updated Successfully');
-        }else{
-           $data = array('name' =>$request->name ,'published_status'=>$request->status);
-           DB::table('countries')->where('id' , $request->id)->update($data);
-           return redirect()->back()->with('message', 'Country Updated Successfully');
+            foreach ($request->gallaryimages as $r) {
+                $gallaryimage = new products_images();
+                $gallaryimage->product_id = $add->id;
+                $gallaryimage->image = Cmf::sendimagetodirectory($r);
+                $gallaryimage->save();
+            }
         }
+
+        return redirect()->back()->with('message', 'Product Added Successfully');
+    }
+    public function updateproduct(Request $request)
+    {
+        $add = products::find($request->id);
+        $add->name = $request->name;
+        $add->short_description = $request->short_description;
+        $add->description = $request->description;
+        $add->price = $request->price;
+        if($request->image)
+        {
+            $add->image = Cmf::sendimagetodirectory($request->image);
+        }
+        if($request->document)
+        {
+            $add->document = Cmf::sendimagetodirectory($request->document);
+        }
+        $add->save();
+        return redirect()->back()->with('message', 'Product Updated Successfully');
     }
 
 
-    public function editcountries($id)
+    public function editproduct($id)
     {
-        $data = DB::table('countries')->where('id' , $id)->get()->first();
-        return view('admin.countries.edit')->with(array('data'=>$data));
+        $data = DB::table('products')->where('id' , $id)->get()->first();
+        return view('admin.products.edit')->with(array('data'=>$data));
     }
 
 
@@ -491,387 +500,6 @@ class AdminController extends Controller
         $plan->status = $id;
         $plan->save();
         return redirect()->back()->with('message', 'Plan Updated Successfully');
-    }
-
-    // Store Settings
-
-
-
-    // Vendor settings
-
-    public function approvedvendors()
-    {
-        $data = user::where('user_type' , 'vendor')->get();
-        return view('admin.vendor.approvedvendors')->with(array('data'=>$data));
-    }
-
-
-    public function searchapprovevendor(Request $request)
-    {
-        $input = $request->all();
-
-
-        $q = user::query();
-
-        if ($input['searchstore'])
-        {
-            $q->where('users.name','like', '%' . $input['searchstore'] . '%' );
-        }
-
-        if (!empty($input['searchseller']))
-        {
-            $q->where('store_settings.shop_name','like', '%' . $input['searchseller'] . '%' );
-        }
-        $q->leftJoin('store_settings', 'store_settings.user_id', '=', 'users.id');
-        $q->where('users.user_type' , 'vendor');
-        $vendor = $q->orderBy('users.id' , 'desc')->get();
-        // print_r($vendor);exit;
-        return view('admin.vendor.searchapprovevendor')->with(array('data'=>$vendor));
-    }
-
-    public function vendordetail($id)
-    { 
-        $data = user::where('id' , $id)->get()->first();
-        $store = StoreSetting::where('user_id' , $id)->get()->first();
-        $vendorrequest = vendorrequests::where('email' , $data->email)->get()->first();
-        $products = product::where('vendor_id' , $id)->get();
-        $orders = orderdetails::where('users'  ,$id)->groupby('order_id')->get();
-        
-
-
-
-        $orderdetails = orderdetails::select(
-            "orderdetails.id",
-            "orderdetails.order_id",
-            "orderdetails.product_id",
-            "orderdetails.quantity",
-            "orderdetails.price",
-            "orderdetails.users",
-            "products.title",
-            "products.sale_price",
-            "orders.customer_id",
-            "store_settings.shop_name",
-            "store_settings.user_id as seller_id",
-            "orders.id as order_parent_id",
-            "orders.payment_method",
-                  
-                        )
-            ->leftJoin('products', 'orderdetails.product_id', '=', 'products.id')
-            ->leftJoin('store_settings', 'orderdetails.users', '=', 'store_settings.user_id')
-            ->leftJoin('orders', 'orderdetails.order_id', '=', 'orders.id')
-            ->leftJoin('users', 'orderdetails.users', '=', 'users.id')
-            ->where('orderdetails.users' , $id)
-            ->get();
-
-        return view('admin.vendor.vendordetail')->with(array('data'=>$data,'data'=>$data,'orders'=>$orders,'store'=>$store,'vendorrequest'=>$vendorrequest,'vendorrequest'=>$vendorrequest,'products'=>$products,'orderdetails'=>$orderdetails));
-    }
-    public function setcommission(Request $request)
-    {
-        $update = StoreSetting::find($request->id);
-        $update->commission = $request->commission;
-        $update->save();
-        return redirect()->back()->with('message', 'Commission Set Successfully');
-    }
-    public function allowwithoutreviewproduct($id  ,$status)
-    {
-        $user = user::find($id);
-        $user->allowwithoutreviewproduct = 1;
-        $user->save();
-        if($status == 1)
-        {
-            return redirect()->back()->with('message', 'Admin allowed This User To Add Products Without Admin Approval');
-        }else{
-            return redirect()->back()->with('warning', 'Admin Dont allowed This User To Add Products Without Admin Approval');
-        }
-    }
-    
-
-    public function newvendorsreuqests()
-    {
-        $data = DB::table('vendorrequests')->where('status' , 0)->get();
-        return view('admin.vendor.newvendorsreuqests')->with(array('data'=>$data));
-    }
-    public function deleterequest($id)
-    {
-        DB::table('deniedrequests')->where('user_id' , $id)->delete();
-        DB::table('users')->where('id' , $id)->delete();
-        return redirect()->back()->with('message', 'User Request Deleted Successfully');
-    }
-    public function viewvendorrequest($id)
-    {
-        $data = user::find($id);
-        $data->new = 0;
-        $data->save();
-        return view('admin.users.viewuserrequest')->with(array('data'=>$data));
-    }
-    public function passwordvalidation($password)
-    {
-        $hashedPassword = Auth::user()->password;
-        if (\Hash::check($password , $hashedPassword))
-        {
-            return 1;
-        }
-        else
-        {
-           return 2;
-        }
-    }
-    public function deleteuser($id , $password)
-    {
-        if($this->passwordvalidation($password) == 1)
-        {
-            DB::table('chat')->where('sendBy' , $id)->delete();
-            DB::table('chat')->where('sendTo' , $id)->delete();
-            DB::table('deniedrequests')->where('user_id' , $id)->delete();
-            DB::table('denieduserequests')->where('user_id' , $id)->delete();
-            DB::table('friendships')->where('sender_id' , $id)->delete();
-            DB::table('friendships')->where('recipient_id' , $id)->delete();
-            DB::table('frindlists')->where('from_id' , $id)->delete();
-            DB::table('frindlists')->where('to_id' , $id)->delete();
-            DB::table('interactions')->where('user_id' , $id)->delete();
-            DB::table('selectedplaces')->where('user_id' , $id)->delete();
-            DB::table('userfields')->where('user_id' , $id)->delete();
-            DB::table('userplaces')->where('send_id' , $id)->delete();
-            DB::table('userplaces')->where('reciever_id' , $id)->delete();
-            DB::table('users')->where('id' , $id)->delete();
-            return redirect()->back()->with('message', 'User Deleted Successfully');
-        }else{
-            return redirect()->back()->with('warning', 'Please Enter Correct Admin Password');
-        }
-        
-        
-    }
-
-    public function approverequest(Request $request)
-    {
-        $data = user::find($request->id);
-        $data->approve_status = 'approved';
-        $data->save();
-         Mail::send('frontend.email.appreq', ['email' => $data->email , 'name' => $data->name, 'email' => $data->email], function($message) use($data){
-              $message->to($data->email);
-              $message->subject('Your Request is Approved');
-          });
-        return redirect()->back()->with('message', 'User Request Approved Successfully');
-    }
-
-    public function rejectrequest(Request $request)
-    {
-        $vendor = user::find($request->id);
-        $reason = $request->reason;
-
-        if($request->deleteuserornot == 'delete')
-        {
-            DB::table('users')->where('id' , $request->id)->delete();
-        }else{
-            $deny = new deniedrequests();
-            $deny->user_id = $request->id;
-            $deny->reason = $request->reason;
-            $deny->status = 'deny';
-            $deny->save();
-        }
-        Mail::send('frontend.email.rejectedrequest', ['email' => $vendor->email , 'name' => $vendor->name, 'reason' => $reason], function($message) use($vendor){
-              $message->to($vendor->email);
-              $message->subject('Your request to join BAEECAY has been rejected');
-        });
-        if($request->deleteuserornot == 'delete')
-        {
-            $url = url('admin/new-users');
-            return Redirect::to($url);
-        }else{
-            return redirect()->back()->with('message', 'User Request Rejected Successfully');
-        }
-    }
-
-
-    public function vendrosettings()
-    {
-        return view('admin.vendor.vendrosettings');
-    }
-
-
-    public function vendorsettingsupdate(Request $request)
-    { 
-        Cmf::updatevalue('vendor_pending_to_approve' , $request->vendor_pending_to_approve);
-        return redirect()->back()->with('message', 'Updated Successfully');
-    }
-
-    public function socialmedia(Request $request)
-    {
-        Cmf::updatevalue('facebook' , $request->facebook);
-        Cmf::updatevalue('twitter' , $request->twitter);
-        Cmf::updatevalue('youtube' , $request->youtube);
-        Cmf::updatevalue('instagram' , $request->instagram);
-        return redirect()->back()->with('message', 'Updated Successfully');
-    }
-
-    // Products
-
-
-
-    public function allproducts()
-    {
-        $viewstatus = 'all';
-        $products = Product::select(
-            "products.id",
-            "products.title",
-            "products.created_at",
-            "products.status",
-            "products.product_img",
-            "products.sale_price",
-            "products.available_stock",
-            "products.sale_price",
-            "categories.category_name",
-                  
-                        )
-            ->orderby('id' , 'desc')
-            ->leftJoin('categories', 'products.category', '=', 'categories.id')
-            ->where('products.delete_status' , 'Active')
-            ->paginate(10);
-        return view('admin.ecommerece.allproducts')->with(array('viewstatus'=>$viewstatus,'products'=>$products));
-    }
-    
-
-    public function allproductswithstatus($id)
-    {
-        $viewstatus = $id;
-        $products = Product::select(
-            "products.id",
-            "products.title",
-            "products.created_at",
-            "products.status",
-            "products.product_img",
-            "products.sale_price",
-            "products.available_stock",
-            "products.sale_price",
-            "categories.category_name",
-                  
-                        )
-            ->where('products.delete_status' , 'Active')
-            ->where('products.status' , $id)
-            ->orderby('id' , 'desc')
-            ->leftJoin('categories', 'products.category', '=', 'categories.id')
-            ->where('products.delete_status' , 'Active')
-            ->paginate(10);
-        return view('admin.ecommerece.allproducts')->with(array('viewstatus'=>$viewstatus,'products'=>$products));
-    }
-
-
-
-
-
-    public function productdetail($id)
-    {
-        $products = Product::select(
-            "products.id",
-            "products.title",
-            "products.created_at",
-            "products.status",
-            "products.product_img",
-            "products.sale_price",
-            "products.discount_price",
-            "products.available_stock",
-            "products.description",
-            "products.vendor_id",
-            "categories.category_name",
-                  
-                        )
-            ->leftJoin('categories', 'products.category', '=', 'categories.id')
-            ->where('products.id' , $id)
-            ->get()
-            ->first();
-
-        $galleryimages  = DB::table('product_gallery_images')->where('products' , $id)->get();  
-        $vendorstore = StoreSetting::where('user_id' , $products->vendor_id)->get()->first();  
-        return view('admin.ecommerece.product-detail')->with(array('product'=>$products,'galleryimages'=>$galleryimages,'vendorstore'=>$vendorstore));
-    }
-
-    public function editproduct($id)
-    {
-        $product = Product::where('id' , $id)->get()->first();
-        $attributes = DB::table('attributes')->where('product_id' , $id)->get();
-        return view('admin.ecommerece.products.edit-product')->with(array('status'=>1,'product'=>$product,'attributes'=>$attributes));  
-    }
-    public function changeproductstatus(Request $request)
-    {
-
-        if(!empty($request->allid))
-        {
-            foreach ($request->allid as $r) {
-                 $change = Product::find($r);
-                 $change->status = $request->status;
-                 $change->save();   
-            }
-            return redirect()->back()->with('message', 'Status Change Successfully');
-        }else{
-            return redirect()->back()->with('warning', 'Please Select Any Option');
-        }
-    }
-
-
-    public function changeproductstatussingle(Request $request)
-    {
-        $change = Product::find($request->allid);
-        if($request->status == 2)
-        {
-            $data = array('products' =>$request->allid ,'reason' =>$request->reject_reason , 'created_at'=>date('Y-m-d'));
-            DB::table('rejected_rasons')->insert($data);
-        }
-        $change->status = $request->status;
-        $change->new_arivals = $request->new_arivals;
-        $change->best_seller = $request->best_seller;
-        $change->most_popular = $request->most_popular;
-        $change->featured = $request->featured;
-        $change->save(); 
-
-        if($request->status == 2)
-        {
-            $notification = 'Your Product is Rejected Due To the Following Reason'.$request->reject_reason.' ';
-            $vendorurl = url('vendor/orders/orderdetail/').'/'.$request->orderid;
-            $icon = '<div class="notify-icon bg-primary"> <i class="mdi mdi-comment-account-outline"></i> </div>';
-            Cmf::save_vendor_notification($notification , $vendorurl , $icon);
-        }
-
-
-        return redirect()->back()->with('message', 'Status Change Successfully');
-    }
-
-    
-
-
-    public function searchadminproduct(Request $request)
-    {
-        $input = $request->all();
-
-
-        $q = Product::query();
-
-        if ($input['searchword'])
-        {
-            $q->where('title','like', '%' . $input['searchword'] . '%' );
-        }
-
-        if ($input['filterbystore'] != 0)
-        {
-            $q->where('vendor_id', $input['filterbystore']);
-        }
-
-        if ($input['category'] != 0)
-        {
-            $q->where('category', $input['category']);
-        }
-
-        if ($input['sub_category'] != 0)
-        {
-            $q->where('sub_category', $input['sub_category']);
-        }
-        if ($input['brand'] != 0)
-        {
-            $q->where('brand', $input['brand']);
-        }
-        $q->where('delete_status' , 'Active');
-        $products = $q->orderBy('id' , 'desc')->get();
-        $viewstatus = 'all';
-        return view('admin.ecommerece.products.searchproducts')->with(array('viewstatus'=>$viewstatus,'products'=>$products));
     }
 
 

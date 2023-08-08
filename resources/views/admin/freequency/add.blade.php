@@ -5,6 +5,7 @@
 @section('admin-content')
 
 @include('admin.alerts')
+@include('admin.alerts')
 <script src="https://cdn.ckeditor.com/4.19.0/standard/ckeditor.js"></script>
 
 <div class="content-page">

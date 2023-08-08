@@ -36,21 +36,21 @@
             <span> Plans </span>
         </a>
     </li>
-    <!-- <li class="side-nav-item">
+    <li class="side-nav-item">
         <a href="javascript:void(0)" class="side-nav-link">
             <i class="uil-cog"></i>
-            <span> Payements</span>
+            <span> Products</span>
             <span class="menu-arrow"></span>
         </a>
         <ul class="side-nav-second-level" aria-expanded="false">
             <li>
-                <a href="{{url('admin/subscriptions/userplans')}}">Subscription Plans</a>
+                <a href="{{url('admin/products/all')}}">All Products</a>
             </li>
             <li>
-                <a href="{{url('admin/earnings')}}">Earnings</a>
+                <a href="{{url('admin/products/add')}}">Add Product</a>
             </li>
         </ul>
-    </li> -->
+    </li>
     <li class="side-nav-item">
         <a href="javascript:void(0)" class="side-nav-link">
             <i class="uil-cog"></i>

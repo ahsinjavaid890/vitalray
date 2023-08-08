@@ -3,7 +3,6 @@
 <title>Vital Ray</title>
 @endsection
 @section('content')
-
 <div class="container">
 	@if(Auth::check())
 	<a class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
@@ -18,7 +17,4 @@
 	<a class="btn btn-primary" href="{{ url('page') }}/{{ $r->slug }}">{{ $r->name }}</a>
 	@endforeach
 </div>
-
-
-
 @endsection
