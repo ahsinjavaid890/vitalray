@@ -42,6 +42,8 @@ Route::get('/quiz', [QuizController::class, 'index']);
 
 
 Route::get('/', [SiteController::class, 'indexview'])->name('home');
+Route::get('/product/detail/{id}', [SiteController::class, 'productdetail']);
+
 Route::get('/about-us', [SiteController::class, 'aboutus']);
 Route::get('/privacy-policy', [SiteController::class, 'privacypolicy']);
 Route::get('/terms-and-conditions', [SiteController::class, 'termsandconditions']);
@@ -172,7 +174,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('add', [AdminController::class, 'addproduct']);
         Route::POST('add', [AdminController::class, 'createproduct']);
         Route::get('edit/{id}', [AdminController::class, 'editproduct']);
+        Route::get('image/delete/{id}', [AdminController::class, 'deletegalleryimage']);
+        Route::post('updategallaryimages', [AdminController::class, 'updategallaryimages']);
         Route::POST('create', [AdminController::class, 'createcountry']);
+        Route::POST('delete', [AdminController::class, 'deleteproduct']);
         Route::POST('updateproduct', [AdminController::class, 'updateproduct']);
     });
 

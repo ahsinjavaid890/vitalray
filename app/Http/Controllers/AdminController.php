@@ -211,6 +211,33 @@ class AdminController extends Controller
         return view('admin.products.edit')->with(array('data'=>$data));
     }
 
+    public function deleteproduct(Request $request){
+        DB::table('products')->where('id',$request->id)->delete();
+        return redirect()->back();
+    }
+
+    public function deletegalleryimage($id){
+        DB::table('products_images')->where('id',$id)->delete();
+        return redirect()->back();
+    }
+
+    public function updategallaryimages(Request $request){
+        // $add = DB::table('products_images')->where('product_id' , $request->id);
+   
+        if($request->gallaryimages)
+        {
+            foreach ($request->gallaryimages as $r) {
+                // $gallaryimage = products_images::where('product_id' , $request->id)->first();
+                $gallaryimage = new products_images();
+                $gallaryimage->product_id = $request->id;
+                $gallaryimage->image = Cmf::sendimagetodirectory($r);
+                $gallaryimage->save();
+            }
+        }
+
+        return redirect()->back()->with('message', 'Gallery Image Updated Successfully');
+    }
+
 
     public function allquizes()
     {

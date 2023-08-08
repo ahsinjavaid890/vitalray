@@ -22,7 +22,7 @@ use App\Models\wishlists;
 use App\Models\orders;
 use App\Models\orderdetails;
 use App\Models\newsletters;
-
+use App\Models\products;
 use Validator;
 use Auth;
 use DB;
@@ -43,8 +43,13 @@ class SiteController extends Controller
         {
             return redirect()->route('userprofile');
         }else{
-            return view('frontend.homepage.index');
+            $product = products::all();
+            return view('frontend.homepage.index')->with(array('product'=>$product));
         }
+    }
+    public function productdetail($id){
+        $product = products::find($id);
+        return view('frontend.product.productdetail')->with(array('product'=>$product));
     }
     public function aboutus()
     {
