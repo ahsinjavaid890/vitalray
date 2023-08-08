@@ -31,8 +31,9 @@
                     </div>
                 </div>
                 <div class="text-left">
-                  <img class="mb-2" src="{{ asset('public/front/media/logo.png') }}"
-                    style="width: 105px;" alt="logo">
+                    <a href="{{ url('') }}">
+                        <img class="mb-2" src="{{ asset('public/front/media/logo.png') }}" style="width: 105px;" alt="logo">
+                    </a>
                   <h4 class="mt-1 mb-1 pb-1">Welcome Back,</h4>
                   <p>Enter your details and login</p>
                 </div>
