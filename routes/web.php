@@ -172,7 +172,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('add', [AdminController::class, 'addproduct']);
         Route::POST('add', [AdminController::class, 'createproduct']);
         Route::get('edit/{id}', [AdminController::class, 'editproduct']);
-        Route::POST('create', [AdminController::class, 'createcountry']);
+        Route::POST('updategallaryimages', [AdminController::class, 'updategallaryimages']);
         Route::POST('updateproduct', [AdminController::class, 'updateproduct']);
     });
 
