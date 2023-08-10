@@ -190,6 +190,7 @@ class AdminController extends Controller
     {
         $add = products::find($request->id);
         $add->name = $request->name;
+        $add->url = Cmf::shorten_url($request->name);
         $add->short_description = $request->short_description;
         $add->description = $request->description;
         $add->price = $request->price;
