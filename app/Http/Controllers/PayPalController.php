@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Plan;
 use App\Models\user;
@@ -16,12 +18,13 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\ExecutePayment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
-use Session;
-use DB;
-use URL;
-use Mail; 
-use Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+
 class PayPalController extends Controller
 {
     public function __construct()
@@ -32,11 +35,11 @@ class PayPalController extends Controller
     }
     public function postPaymentWithpaypal($id)
     {
-        $plan = DB::table('plans')->where('id' , $id)->get()->first();
+        $plan = DB::table('plans')->where('id', $id)->get()->first();
 
-        Session::put('plainid',$id);
+        Session::put('plainid', $id);
 
-        $totalprice = round($plan->price+4);
+        $totalprice = round($plan->price + 4);
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
         $item_1 = new Item();
@@ -51,7 +54,7 @@ class PayPalController extends Controller
             ->setTotal($totalprice);
         $transaction = new Transaction();
         $transaction->setAmount($amount)->setItemList($item_list)
-        ->setDescription('Enter Your transaction description');
+            ->setDescription('Enter Your transaction description');
         $redirect_urls = new RedirectUrls();
         $redirect_urls->setReturnUrl(URL::route('status'))
             ->setCancelUrl(URL::route('status'));
@@ -59,59 +62,58 @@ class PayPalController extends Controller
         $payment->setIntent('Sale')
             ->setPayer($payer)
             ->setRedirectUrls($redirect_urls)
-            ->setTransactions(array($transaction));            
+            ->setTransactions(array($transaction));
         try {
             $payment->create($this->_api_context);
         } catch (\PayPal\Exception\PPConnectionException $ex) {
             if (\Config::get('app.debug')) {
-                \Session::put('warning','Connection timeout');
-                return Redirect::route('paywithpaypal'); 
+                \Session::put('warning', 'Connection timeout');
+                return Redirect::route('paywithpaypal');
 
                 $url = url('stepthree');
                 return Redirect::to($url);
-
             } else {
-                \Session::put('warning','Some error occur, sorry for inconvenient');
+                \Session::put('warning', 'Some error occur, sorry for inconvenient');
                 $url = url('stepthree');
-                return Redirect::to($url);             
+                return Redirect::to($url);
             }
         }
 
-        foreach($payment->getLinks() as $link) {
-            if($link->getRel() == 'approval_url') {
+        foreach ($payment->getLinks() as $link) {
+            if ($link->getRel() == 'approval_url') {
                 $redirect_url = $link->getHref();
                 break;
             }
         }
-        
+
         Session::put('paypal_payment_id', $payment->getId());
 
-        if(isset($redirect_url)) {            
+        if (isset($redirect_url)) {
             return Redirect::away($redirect_url);
         }
 
-        \Session::put('warning','Unknown error occurred');
-        $url = url('payement').'/'.$request->orderid;
+        \Session::put('warning', 'Unknown error occurred');
+        $url = url('payement') . '/' . $request->orderid;
         return Redirect::to($url);
     }
 
 
     public function getPaymentStatus(Request $request)
-    {        
+    {
         $payment_id = Session::get('paypal_payment_id');
 
         Session::forget('paypal_payment_id');
         if (empty($request->input('PayerID')) || empty($request->input('token'))) {
-            \Session::put('warning','Payment failed due to panga');
+            \Session::put('warning', 'Payment failed due to panga');
             $url = url('stepthree');
             return Redirect::to($url);
         }
-        $payment = Payment::get($payment_id, $this->_api_context);        
+        $payment = Payment::get($payment_id, $this->_api_context);
         $execution = new PaymentExecution();
-        $execution->setPayerId($request->input('PayerID'));        
+        $execution->setPayerId($request->input('PayerID'));
         $result = $payment->execute($execution, $this->_api_context);
-        
-        if ($result->getState() == 'approved') {         
+
+        if ($result->getState() == 'approved') {
 
 
 
@@ -122,13 +124,13 @@ class PayPalController extends Controller
             $update->plan = $plainid;
             $update->payement_method = 'paypal';
             $update->save();
-            
+
             $user = Auth::user();
-            $plandata = DB::table('plans')->where('id' , $plainid)->get()->first();
+            $plandata = DB::table('plans')->where('id', $plainid)->get()->first();
             $subject = 'Welcome To Vital Ray | Invoice for Purchasing Plan';
-            Mail::send('frontend.email.invoice', ['name' => 'test','planname' => $plandata->name,'price' => $plandata->price,'places_allowed' => 1], function($message) use($user , $subject){
-                  $message->to($user->email);
-                  $message->subject($subject);
+            Mail::send('frontend.email.invoice', ['name' => 'test', 'planname' => $plandata->name, 'price' => $plandata->price, 'places_allowed' => 1], function ($message) use ($user, $subject) {
+                $message->to($user->email);
+                $message->subject($subject);
             });
             $next_due_date = date('d/m/Y', strtotime("+$plandata->no_of_days days"));
             $plan = new subscriptions();
@@ -139,16 +141,11 @@ class PayPalController extends Controller
             $plan->save();
             $url = url('conferm');
             return Redirect::to($url);
-
-
-
-        }else{
-            \Session::put('warning','Payment failed due to very very panga !!');
+        } else {
+            \Session::put('warning', 'Payment failed due to very very panga !!');
             $orderid = Session::get('orderid');
             $url = url('stepthree');
             return Redirect::to($url);
         }
-
-        
     }
 }

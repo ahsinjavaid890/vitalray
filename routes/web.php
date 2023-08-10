@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Vendor\ChatController;
 use App\Http\Controllers\Admin\Auth\AuthController;
 use App\Http\Controllers\Admin\MyshopController;
+use App\Http\Controllers\stripeController;
 use App\Models\Chat;
 
 
@@ -43,6 +44,8 @@ Route::get('/quiz', [QuizController::class, 'index']);
 
 Route::get('/', [SiteController::class, 'indexview'])->name('home');
 Route::get('/product/detail/{id}', [SiteController::class, 'productdetail']);
+Route::get('/checkout/{id}', [SiteController::class, 'checkout']);
+Route::post('/stripepayment', [stripeController::class, 'stripePost']);
 
 Route::get('/about-us', [SiteController::class, 'aboutus']);
 Route::get('/privacy-policy', [SiteController::class, 'privacypolicy']);

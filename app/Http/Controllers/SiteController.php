@@ -47,8 +47,9 @@ class SiteController extends Controller
             return view('frontend.homepage.index')->with(array('product'=>$product));
         }
     }
-    public function productdetail($id){
-        $product = products::find($id);
+    public function productdetail($url){
+        $product = DB::table('products')->where('url',$url)->first();
+        // $product = products::find($url);
         return view('frontend.product.productdetail')->with(array('product'=>$product));
     }
     public function aboutus()
@@ -63,6 +64,7 @@ class SiteController extends Controller
     {
         return view('frontend.about.termsandconditions');
     }
+
     public function cookiespolicy()
     {
         return view('frontend.about.cookiespolicy');
@@ -89,5 +91,9 @@ class SiteController extends Controller
     public function contactus()
     {
         return view('frontend.contactus.index');
+    }
+
+    public function checkout($url){
+        return view('frontend.checkout.checkout');
     }
 }

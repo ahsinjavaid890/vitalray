@@ -65,7 +65,7 @@
 	}
 
 	.wsk-cp-text {
-		padding-top: 150%;
+		padding-top: 150px;
 	}
 
 	.wsk-cp-text .category {
@@ -260,11 +260,14 @@
 <div class="shell">
 	<div class="container">
 		<div class="row">
+
+			
+
 			@foreach ($product as $p)
 			<div class="col-md-3">
 				<div class="wsk-cp-product">
 					<div class="wsk-cp-img">
-						<a href="{{url('/product/detail/')}}/{{$p->id}}">
+						<a href="{{url('/product/detail/')}}/{{$p->url}}">
 							<img src="{{url('public/images/')}}/{{$p->image}}"
 							alt="Product" class="img-responsive" />
 						</a>
