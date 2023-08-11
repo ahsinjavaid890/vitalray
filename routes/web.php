@@ -45,7 +45,7 @@ Route::get('/quiz', [QuizController::class, 'index']);
 Route::get('/', [SiteController::class, 'indexview'])->name('home');
 Route::get('/product/detail/{id}', [SiteController::class, 'productdetail']);
 Route::get('/checkout/{id}', [SiteController::class, 'checkout']);
-Route::post('/stripepayment', [stripeController::class, 'stripePost']);
+Route::post('/stripepayment', [stripeController::class, 'stripePost'])->name("stripe.post");
 
 Route::get('/about-us', [SiteController::class, 'aboutus']);
 Route::get('/privacy-policy', [SiteController::class, 'privacypolicy']);
@@ -297,6 +297,14 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('admin/deletepage/{id}', [AdminController::class, 'deletepage']);
     });
     Route::POST('/vendorsettingsupdate', [AdminController::class, 'vendorsettingsupdate']);
+
+    Route::group(['prefix' => 'order'], function () { 
+        Route::get('/allorders', [AdminController::class, 'allorders']);
+    });
+
+
+
+
 });
 Route::get('/admin/add-blog', [AdminController::class, 'addblog']);
 Route::POST('/createblog', [AdminController::class, 'createblog']);

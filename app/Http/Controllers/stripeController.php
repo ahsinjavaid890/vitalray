@@ -3,93 +3,73 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\order;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Stripe\Exception\CardException;
-use Stripe\StripeClient;
+use Illuminate\Support\Facades\Session;
+use Stripe;
 
 class stripeController extends Controller
 {
-    private $stripe;
-    public function __construct()
-    {
-         $this->stripe = new StripeClient('sk_test_51Mdt8dFlScBLb25b16dvjbg0ACx5BjqcxF34yowethXJcCGCIfihaygF4GJQStLj9fYiu8WIIkuUSwig8JrZHlED00X4tEJWrY');
-    }
-
     public function stripePost(Request $request)
     {
-        $price = $request->total;
-        $product_id = $request->product_id;
+        $product_id = $request['product_id'];
+        $price = $request['price'];
 
-        $validator = Validator::make($request->all(), [
-            'fullName' => 'required',
-            'cardNumber' => 'required',
-            'month' => 'required',
-            'year' => 'required',
-            'cvv' => 'required'
+        $request->total;
+        Stripe\Stripe::setApiKey("sk_test_51Mdt8dFlScBLb25b16dvjbg0ACx5BjqcxF34yowethXJcCGCIfihaygF4GJQStLj9fYiu8WIIkuUSwig8JrZHlED00X4tEJWrY");
+    
+        $charge = Stripe\Charge::create ([
+                "amount" => 100 * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Test payment" 
         ]);
+      
+        $paymenyResponse = $charge->jsonSerialize();
 
-        if ($validator->fails()) {
-            $request->session()->flash('danger', $validator->errors()->first());
-            return response()->redirectTo('/');
-        }
+            echo "<pre>";
+            print_r($paymenyResponse);
+            die;
 
-        $token = $this->createToken($request);
-        if (!empty($token['error'])) {
-            $request->session()->flash('danger', $token['error']);
-            return response()->redirectTo('/');
-        }
-        if (empty($token['id'])) {
-            $request->session()->flash('danger', 'Payment failed.');
-            return response()->redirectTo('/');
-        }
 
-        $charge = $this->createCharge($token['id'], $price);
+            // check whether the payment is successful
+            if ($paymenyResponse['amount_refunded'] == 0 && empty($paymenyResponse['failure_code']) && $paymenyResponse['paid'] == 1 && $paymenyResponse['captured'] == 1) {
 
-        if (!empty($charge) && $charge['status'] == 'succeeded') {
-            $request->session()->flash('success', 'Payment completed.');
-        } else {
-            $request->session()->flash('danger', 'Payment failed.');
-        }
-        return response()->redirectTo('/');
-    }
 
-    private function createToken($cardData)
-    {
-        $token = null;
-        try {
-            $token = $this->stripe->tokens->create([
-                'card' => [
-                    'number' => $cardData['cardNumber'],
-                    'exp_month' => $cardData['month'],
-                    'exp_year' => $cardData['year'],
-                    'cvc' => $cardData['cvv']
-                ]
-            ]);
-        } catch (CardException $e) {
-            $token['error'] = $e->getError()->message;
-        } catch (Exception $e) {
-            $token['error'] = $e->getMessage();
-        }
-        return $token;
-    }
+                $order = new order();
+                // $payment = new payment();
 
-    private function createCharge($tokenId, $amount)
-    {
-        $charge = null;
-        try {
-            $charge = $this->stripe->charges->create([
-                'amount' => $amount,
-                'currency' => 'usd',
-                'source' => $tokenId,
-                'description' => 'My first payment'
-            ]);
 
-        } catch (Exception $e) {
-            $charge['error'] = $e->getMessage();
-        }
-        return $charge;
-       
+                $order->name = $request['name'];
+                $order->email = $request['email'];
+                $order->address = $request['address'];
+                $order->product_id =  $product_id;
+                $order->qty =  1;
+                $order->total_price = $price;
+                $order->payment_type = "stripe";
+                $order->payment_status = "succeeded";
+                $order->save();
+                $lastinsertedId = $order->id;
+
+                // transaction details 
+                //  $balanceTransaction = $paymenyResponse['balance_transaction'];
+                //  $paidCurrency = $paymenyResponse['currency'];
+                //  $paymentStatus = $paymenyResponse['status'];
+                    // $charge_id = paymenyResponse['id'];
+
+                //  $payment->order_id = $lastinsertedId;
+                //  $payment->txn_id = $balanceTransaction;
+                //  $payment->amount = $price;
+                //  $payment->currency = $paidCurrency;
+                //  $payment->status = $paymentStatus;
+                //  $payment->save();
+
+
+                Session::flash('success', 'Payment Successfull!, Your order has been placed');
+                return response()->redirectTo('/');
+            }
     }
 }

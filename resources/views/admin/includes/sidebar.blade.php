@@ -16,6 +16,12 @@
         </a>
     </li>
     <li class="side-nav-item">
+        <a href="{{url('admin/order/allorders')}}" class="side-nav-link">
+            <i class="uil-user"></i>
+            <span> Orders </span>
+        </a>
+    </li>
+    <li class="side-nav-item">
         <a href="javascript:void(0)" class="side-nav-link">
             <i class="uil-cog"></i>
             <span> Frequencies </span>

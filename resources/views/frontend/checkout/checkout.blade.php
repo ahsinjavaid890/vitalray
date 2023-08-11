@@ -19,72 +19,90 @@
     @endforeach
 </div>
 
-@foreach (['danger', 'success'] as $status)
-@if(Session::has($status))
-    <p class="alert alert-{{$status}}">{{ Session::get($status) }}</p>
-@endif
-@endforeach
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+<div class="container">
+    @if (Session::has('success'))
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ Session::get('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        </button>
+      </div>
+    @endif
+</div>
+
 
 <section class="mt-3">
     <div style="background: #386bc0;border-radius:10px" class="container  p-4">
         <div class="row">
             <div class="col-6">
                 <h3 class="head">Information</h3>
-                <div class="row">
-                    <div class="col">
-                        <label for="">Name</label>
-                        <input type="text" class="form-control" placeholder="Name">
-                    </div>
-                    <div class="col">
-                        <label for="">Email</label>
-                        <input type="email" class="form-control" placeholder="demo@gmail.com">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label for="">Address</label>
-                        <input type="text" class="form-control" placeholder="Address">
-                    </div>
-
-                </div>
-                <hr>
-                <div>
-                    <form role="form" method="POST" id="paymentForm" action="{{ url('/stripepayment')}}">
-                        @csrf
-                    <h3 class="head">Payment Information</h3>
+                <form role="form" action="{{ url('/stripepayment') }}" method="post" class="require-validation"
+                    data-cc-on-file="false" data-stripe-publishable-key="{{ env('STRIPE_KEY') }}" id="payment-form">
+                    @csrf
                     <div class="row">
                         <div class="col">
-                            <input type="text" class="form-control" required name="fullName" placeholder="Fullname">
+                            <label for="">Name</label>
+                            <input type="text" name="name" required class="form-control" placeholder="Name">
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" required maxlength="16" name="cardNumber" placeholder="Card Number">
+                            <label for="">Email</label>
+                            <input type="email" name="email" required class="form-control" placeholder="demo@gmail.com">
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="row">
                         <div class="col">
-                            <select class="form-control" required name="month">
-                                <option value="">MM</option>
-                                @foreach(range(1, 12) as $month)
-                                    <option value="{{$month}}">{{$month}}</option>
-                                @endforeach
-                            </select>
-                            {{-- <input type="text" class="form-control" placeholder="MM"> --}}
+                            <label for="">Address</label>
+                            <input type="text" name="address" required class="form-control" placeholder="Address">
                         </div>
-                        <div class="col">
-                            <select class="form-control" required name="year">
-                                <option value="">YYYY</option>
-                                @foreach(range(date('Y'), date('Y') + 10) as $year)
-                                    <option value="{{$year}}">{{$year}}</option>
-                                @endforeach
-                            </select>
-                            {{-- <input type="text" class="form-control" placeholder="YYYY"> --}}
-                        </div>
-                        <div class="col">
-                            <input type="text" name="cvv" maxlength="3" class="form-control" placeholder="CVV">
-                        </div>
+
                     </div>
-                
-                </div>
+                    <hr>
+                    <div>
+
+                        <h3 class="head">Payment Information</h3>
+
+                        <div class='form-row row'>
+                            <div class='col-xs-12 form-group required'>
+                                <label class='control-label'>Name on Card</label> <input class='form-control' size='4'
+                                    type='text'>
+                            </div>
+                        </div>
+
+                        <div class='form-row row'>
+                            <div class='col-xs-12 form-group  required'>
+                                <label class='control-label'>Card Number</label> <input autocomplete='off'
+                                    class='form-control card-number' maxlength="16" required type='text'>
+                            </div>
+                        </div>
+
+                        <div class='form-row row'>
+                            <div class='col-xs-12 col-md-4 form-group cvc required'>
+                                <label class='control-label'>CVC</label> <input required autocomplete='off'
+                                    class='form-control card-cvc' placeholder='ex. 311' maxlength="4" size='4'
+                                    type='text'>
+                            </div>
+                            <div class='col-xs-12 col-md-4 form-group expiration required'>
+                                <label class='control-label'>Expiration Month</label> <input
+                                    class='form-control card-expiry-month' required placeholder='MM' maxlength="2" size='2'
+                                    type='text'>
+                            </div>
+                            <div class='col-xs-12 col-md-4 form-group expiration required'>
+                                <label class='control-label'>Expiration Year</label> <input
+                                    class='form-control card-expiry-year' required placeholder='YYYY' maxlength="4" size='4'
+                                    type='text'>
+                            </div>
+                        </div>
+
+                        <div class='form-row row'>
+                            <div class='col-md-12 error form-group mt-2 d-none'>
+                                <div class='alert-danger alert'>Please correct the errors and try
+                                    again.</div>
+                            </div>
+                        </div>
+
+                    </div>
             </div>
             @php
             $url = request()->segment(count(request()->segments()));
@@ -105,17 +123,90 @@
                             </li>
                         </ul>
                         <input type="hidden" name="product_id" value="{{$product->id}}">
-                        <input type="hidden" name="total" value="{{$product->price}}">
+                        <input type="hidden" name="price" value="{{$product->price}}">
                     </div>
                     <button type="submit" class="mt-4 btn btn-warning text-dark"> Pay With Strip</button>
                     <h4 class="my-4 text-center">OR</h4>
                 </div>
             </div>
-        </form>
+            </form>
 
         </div>
     </div>
 </section>
+
+
+
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+<script type="text/javascript">
+    $(function() {
+  
+    /*------------------------------------------
+    --------------------------------------------
+    Stripe Payment Code
+    --------------------------------------------
+    --------------------------------------------*/
+    
+    var $form = $(".require-validation");
+     
+    $('form.require-validation').bind('submit', function(e) {
+        var $form = $(".require-validation"),
+        inputSelector = ['input[type=email]', 'input[type=password]',
+                         'input[type=text]', 'input[type=file]',
+                         'textarea'].join(', '),
+        $inputs = $form.find('.required').find(inputSelector),
+        $errorMessage = $form.find('div.error'),
+        valid = true;
+        $errorMessage.addClass('d-none');
+    
+        $('.has-error').removeClass('has-error');
+        $inputs.each(function(i, el) {
+          var $input = $(el);
+          if ($input.val() === '') {
+            $input.parent().addClass('has-error');
+            $errorMessage.removeClass('d-none');
+            e.preventDefault();
+          }
+        });
+     
+        if (!$form.data('cc-on-file')) {
+          e.preventDefault();
+          Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+          Stripe.createToken({
+            number: $('.card-number').val(),
+            cvc: $('.card-cvc').val(),
+            exp_month: $('.card-expiry-month').val(),
+            exp_year: $('.card-expiry-year').val()
+          }, stripeResponseHandler);
+        }
+    
+    });
+      
+    /*------------------------------------------
+    --------------------------------------------
+    Stripe Response Handler
+    --------------------------------------------
+    --------------------------------------------*/
+    function stripeResponseHandler(status, response) {
+        if (response.error) {
+            $('.error')
+                .removeClass('d-none')
+                .find('.alert')
+                .text(response.error.message);
+        } else {
+            /* token contains id, last4, and card type */
+            var token = response['id'];
+                 
+            $form.find('input[type=text]').empty();
+            $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+            $form.get(0).submit();
+        }
+    }
+     
+});
+</script>
+
 
 
 

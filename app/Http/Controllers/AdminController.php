@@ -30,17 +30,17 @@ use App\Models\deniedrequests;
 use App\Models\payments;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Auth;
-use DB;
-use Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use File;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Redirect;
 use DataTables;
 use PDF;
 use Storage;
 use App\Http\Requests;
-
+use App\Models\order;
 use Illuminate\Validation\Rule;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -1174,5 +1174,11 @@ class AdminController extends Controller
     {
         $array = array('status'=>0);
         $data = DB::table('adminnotification')->where('id' , $id)->update($array);
+    }
+
+
+    public function allorders(){
+        $orders = order::all();
+        return view('admin.orders.allorders')->with(array('orders'=>$orders));
     }
 }
