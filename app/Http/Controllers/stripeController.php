@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Stripe\Exception\CardException;
 use Illuminate\Support\Facades\Session;
-use Stripe;
+use Stripe; 
 
 class stripeController extends Controller
 {
