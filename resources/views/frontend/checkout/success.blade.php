@@ -18,10 +18,6 @@
     <a class="btn btn-primary" href="{{ url('page') }}/{{ $r->slug }}">{{ $r->name }}</a>
     @endforeach
 </div>
-
-
-
-
 <div class="container mt-3">
     @if (Session::has('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -38,21 +34,9 @@
     </div>
     @endif
 </div>
-
-
 <section class="mt-3">
     <div style="background: #386bc0;border-radius:10px;" class="container text-white p-4">
         <h3>Your Order has been placed Succesfully</h3>
     </div>
 </section>
-
-
-
-
-
-
-
-
-
-
 @endsection
