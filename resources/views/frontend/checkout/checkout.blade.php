@@ -22,7 +22,6 @@
 $url = request()->segment(count(request()->segments()));
 $product = DB::table('products')->where('url',$url)->first();
 @endphp
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
 <div class="container">
     @if (Session::has('success'))
@@ -149,39 +148,6 @@ $product = DB::table('products')->where('url',$url)->first();
             <div class="col-6">
                 <div class="row px-3 ">
 
-
-
-
-
-
-
-
-
-
-
- 
-                    
-                    </form>
-                    <h4 class="my-2 text-center">OR</h4>
-
-                    <form action="{{route('data')}}" method="post">
-                        @csrf
-                        <input type="hidden" required id="name_hidden" name="name">
-                        <input type="hidden" required id="email_hidden" name="email">
-                        <input type="hidden" required id="phonenumber_hidden" name="phonenumber">
-                        <input type="hidden" required id="zipcode_hidden" name="zipcode">
-                        <input type="hidden" required id="city_hidden" name="city">
-                        <input type="hidden" required id="state_hidden" name="state">
-                        <input type="hidden" required id="address_hidden" name="address">
-                        <input type="hidden" required name="product_id" value="{{$product->id}}">
-                        <input type="hidden" required name="price" value="{{$product->price}}">
-
-                        <button type="submit" style="font-size: 18px" class=" btn-block btn btn-info text-white">
-                            Pay With
-                            Paypal</button>
-
-                    </form>
-
                     @include('frontend.layouts.include.googlepay')
 
 
@@ -192,92 +158,4 @@ $product = DB::table('products')->where('url',$url)->first();
         </div>
     </div>
 </section>
-
-
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script>
-    function copyname(value) {
-        $('#name_hidden').val(value);
-    }
-    function copyemail(value) {
-        $('#email_hidden').val(value);
-    }
-    function copyphone(value) {
-        $('#phonenumber_hidden').val(value);
-    }
-    function copyzipcode(value) {
-        $('#zipcode_hidden').val(value);
-    }
-    function copycity(value) {
-        $('#city_hidden').val(value);
-    }
-    function copystate(value) {
-        $('#state_hidden').val(value);
-    }
-    function copyaddress(value) {
-        $('#address_hidden').val(value);
-    }
-</script>
-
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-
-<script type="text/javascript">
-    $(function() {
-    var $form = $(".require-validation");     
-    $('form.require-validation').bind('submit', function(e) {
-        var $form = $(".require-validation"),
-        inputSelector = ['input[type=email]', 'input[type=password]',
-                         'input[type=text]', 'input[type=file]',
-                         'textarea'].join(', '),
-        $inputs = $form.find('.required').find(inputSelector),
-        $errorMessage = $form.find('div.error'),
-        valid = true;
-        $errorMessage.addClass('d-none');
-    
-        $('.has-error').removeClass('has-error');
-        $inputs.each(function(i, el) {
-          var $input = $(el);
-          if ($input.val() === '') {
-            $input.parent().addClass('has-error');
-            $errorMessage.removeClass('d-none');
-            e.preventDefault();
-          }
-        });
-     
-        if (!$form.data('cc-on-file')) {
-          e.preventDefault();
-          Stripe.setPublishableKey($form.data('stripe-publishable-key'));
-          Stripe.createToken({
-            number: $('.card-number').val(),
-            cvc: $('.card-cvc').val(),
-            exp_month: $('.card-expiry-month').val(),
-            exp_year: $('.card-expiry-year').val()
-          }, stripeResponseHandler);
-        }
-    
-    });
-      
-    /*------------------------------------------
-    --------------------------------------------
-    Stripe Response Handler
-    --------------------------------------------
-    --------------------------------------------*/
-    function stripeResponseHandler(status, response) {
-        if (response.error) {
-            $('.error')
-                .removeClass('d-none')
-                .find('.alert')
-                .text(response.error.message);
-        } else {
-            /* token contains id, last4, and card type */
-            var token = response['id'];
-                 
-            $form.find('input[type=text]').empty();
-            $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
-            $form.get(0).submit();
-        }
-    }
-     
-});
-</script>
 @endsection
