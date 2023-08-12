@@ -2,7 +2,6 @@
 @section('meta-tags')
 <title>Checkout</title>
 @endsection
-
 @section('content')
 @include('admin.alerts')
 <style type="text/css">
