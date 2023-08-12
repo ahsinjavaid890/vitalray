@@ -1152,12 +1152,14 @@ class AdminController extends Controller
     public function updateorder(Request $request)
     {
         $order_id = $request['order_id'];
+        $previous_order = DB::table('orders')->where('id', $order_id)->get()->first();
+        $previous_status = $previous_order->order_status;
         $status = $request['status'];
         $order = order::find($order_id);
         $order->order_status = $status;
         $order->save();
 
-        $subject = 'Welcome To Vital Ray | Order Status';
+        $subject = 'Welcome To Vital Ray | Order id : WR-00'.$order_id;
 
         $orderdata = DB::table('orders')->where('id', $order_id)->get()->first();
          $name = $orderdata->name;
@@ -1167,7 +1169,7 @@ class AdminController extends Controller
         $product = DB::table('products')->where('id', $orderdata->product_id)->get()->first();
         $product = $product->name;
 
-        Mail::send('frontend.email.orderstatus', ['name' => $name,'status'=> $order_status, 'productname' => $product, 'price' => $total_price, 'places_allowed' => 1], function ($message) use ( $orderdata, $subject) {
+        Mail::send('frontend.email.orderstatus', ['name' => $name,'status'=> $order_status,'previous_status'=>$previous_status,'productname' => $product, 'price' => $total_price, 'places_allowed' => 1], function ($message) use ( $orderdata, $subject) {
             $message->to($orderdata->email);
             $message->subject($subject);
         });

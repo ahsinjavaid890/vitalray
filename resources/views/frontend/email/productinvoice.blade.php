@@ -4,7 +4,7 @@
     <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:24px;font-weight:bold;line-height:22px;text-align:center;color:white;">
-            Order Status
+            Thank you for Purchased
         </div>
 
     </td>
@@ -14,7 +14,7 @@
 
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:22px;text-align:left;color:white;">
             <p>Hi {{ $name }},</p>
-            <p> Your Order Status has been changed from <strong> {{$previous_status}} </strong> to <strong> {{$status}}</strong></p>
+            <p>We are Happy that You Purchased {{ $planname }}. </p>
         </div>
 
     </td>
@@ -30,7 +30,7 @@
                 <th style="padding: 0 0 0 15px;" align="right">Price</th>
             </tr>
             <tr>
-                <td style="padding: 5px 15px 5px 0;">{{ $productname }}</td>
+                <td style="padding: 5px 15px 5px 0;">{{ $planname }}</td>
                 <td style="padding: 0 15px;">1</td>
                 <td style="padding: 0 0 0 15px;" align="right">${{ $price }}</td>
             </tr>
