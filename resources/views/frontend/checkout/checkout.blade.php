@@ -8,6 +8,9 @@ $url = request()->segment(count(request()->segments()));
 $product = DB::table('products')->where('url',$url)->first();
 @endphp
 <style type="text/css">
+    .overflow-hidden{
+        overflow: auto !important;
+    }
     #card-element{
       padding: 10px;
       border: 1px solid #fff;
