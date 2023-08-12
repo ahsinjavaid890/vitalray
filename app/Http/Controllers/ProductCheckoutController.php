@@ -50,7 +50,9 @@ class ProductCheckoutController extends Controller
         $order->qty =  1;
         $order->total_price = $price;
         $order->payment_type = "Paypal";
-        $order->payment_status = "pending";
+        $order->payment_status = "Pending";
+        $order->order_status = "Pending";
+        $order->new_status = "1";
         $order->save();
 
         Session::put('order_id', $order->id);
@@ -74,19 +76,7 @@ class ProductCheckoutController extends Controller
             $payment->create($this->_api_context);
         } catch (\PayPal\Exception\PPConnectionException $ex) {
             if (\Config::get('app.debug')) {
-
-
-                
-
-
-
             } else {
-
-
-               
-
-
-
             }
         }
 
@@ -127,9 +117,23 @@ class ProductCheckoutController extends Controller
         if ($result->getState() == 'approved') {
             $order_id = Session::get('order_id');
             $order = order::find($order_id);
-            $order->payment_status = "succeded";
+            $order->payment_status = "Succeeded";
             $order->save();
-            return response()->redirectTo('success')->with('success','Payment Successfull!');
+
+            $order = DB::table('orders')->where('id', $order_id)->get()->first();
+            $customername = $order->name;
+            $price = $order->total_price;
+
+            $product = DB::table('products')->where('id', $order->product_id)->get()->first();
+            $product = $product->name;
+
+            $subject = 'Welcome To Vital Ray | Invoice for Product Purchased';
+            Mail::send('frontend.email.productinvoice', ['name' => $customername, 'planname' => $product, 'price' => $price], function ($message) use ( $order, $subject) {
+                $message->to($order->email);
+                $message->subject($subject);
+            });
+
+            return response()->redirectTo('success')->with('success', 'Payment Successfull!');
         } else {
             \Session::put('warning', 'Payment failed due to very very panga !!');
             $orderid = Session::get('orderid');

@@ -229,7 +229,7 @@ $product = DB::table('products')->where('url',$url)->first();
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-outline form-black mb-4">
-                                            <input id="cvv" autocomplete='off' class='form-control form-control-lg card-cvc' placeholder='ex. 311' maxlength="4" type='text'>
+                                            <input id="cvv" autocomplete='off' class='form-control form-control-lg card-cvc' placeholder='ex. 311' maxlength="3" type='text'>
                                             <label class="form-label">CVC</label>
                                         </div>
                                     </div>
