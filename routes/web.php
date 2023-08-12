@@ -24,8 +24,8 @@ use App\Models\Chat;
 // Admin
 
 
-// Route::get('/paypalpayement/{id}', [PayPalController::class, 'postPaymentWithpaypal'])->name('paypal');
-// Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('status');
+Route::get('/paypalpayement/{id}', [PayPalController::class, 'postPaymentWithpaypal'])->name('paypal');
+Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('status');
 
 
 Route::post('/payment', [App\Http\Controllers\OrderController::class, 'payment']);

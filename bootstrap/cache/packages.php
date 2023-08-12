@@ -88,15 +88,4 @@
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
-  'srmklive/paypal' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Srmklive\\PayPal\\Providers\\PayPalServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'PayPal' => 'Srmklive\\PayPal\\Facades\\PayPal',
-    ),
-  ),
 );
