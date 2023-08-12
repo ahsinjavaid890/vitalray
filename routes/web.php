@@ -9,7 +9,7 @@ use App\Http\Controllers\Vendor\StoreSettingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\PlanController;
-use App\Http\Controllers\QuizController;
+use App\Http\Controllers\ProductCheckoutController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\PayPalController;
@@ -31,11 +31,8 @@ Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('stat
 // Route::post('/payment', [App\Http\Controllers\OrderController::class, 'payment']);
 
 
-Route::post('data', [PayPalController::class, 'data'])->name('data');
-Route::get('create-transaction', [PayPalController::class, 'createTransaction'])->name('createTransaction');
-Route::get('process-transaction', [PayPalController::class, 'processTransaction'])->name('processTransaction');
-Route::get('success-transaction', [PayPalController::class, 'successTransaction'])->name('successTransaction');
-Route::get('cancel-transaction', [PayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
+Route::post('sendcheckoutpayementpaypal', [ProductCheckoutController::class, 'sendcheckoutpayementpaypal']);
+
 
 
 Route::middleware("auth")->group(function () {
@@ -313,7 +310,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/allorders', [AdminController::class, 'allorders']);
         Route::get('/orderdetail/{id}', [AdminController::class, 'orderdetail']);
         Route::get('/orderdelete/{id}', [AdminController::class, 'orderdelete']);
-        Route::post('/updateorder', [AdminController::class, 'updateorder']);
     });
 
 
