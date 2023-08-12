@@ -282,7 +282,7 @@
 							<p class="text-dark">{{ $p->short_description}}</p>
 						</div>
 						<div class="card-footer">
-							<div class="wcf-left"><span class="price text-dark" >Rs {{$p->price}}</span></div>
+							<div class="wcf-left"><span class="price text-dark" > {{$p->price}} USD</span></div>
 							<div class="wcf-right"><a href="#" class="buy-btn"><i
 										class="zmdi zmdi-shopping-basket"></i></a></div>
 						</div>

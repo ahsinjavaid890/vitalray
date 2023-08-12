@@ -1178,7 +1178,12 @@ class AdminController extends Controller
 
 
     public function allorders(){
-        $orders = order::all();
-        return view('admin.orders.allorders')->with(array('orders'=>$orders));
+      
+        $data = order::orderby('id' , 'desc')->paginate(10);
+        return view('admin.orders.allorders')->with(array('data'=>$data));
+    }
+    public function orderdetail($id){
+        $data = order::where('id',$id)->first();
+        return view('admin.orders.orderdetail')->with(array('data'=>$data));
     }
 }

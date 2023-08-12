@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\order;
+use App\Models\payments;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,16 +14,19 @@ use Stripe;
 
 class stripeController extends Controller
 {
+    public function success(){
+        return view('frontend.checkout.success');
+    }
     public function stripePost(Request $request)
     {
         $product_id = $request['product_id'];
         $price = $request['price'];
 
         $request->total;
-        Stripe\Stripe::setApiKey("sk_test_51Mdt8dFlScBLb25b16dvjbg0ACx5BjqcxF34yowethXJcCGCIfihaygF4GJQStLj9fYiu8WIIkuUSwig8JrZHlED00X4tEJWrY");
+        Stripe\Stripe::setApiKey("sk_test_xGtUq0Ocmz3drfEP0TOftndI005V9FjVqF");
     
         $charge = Stripe\Charge::create ([
-                "amount" => 100 * 100,
+                "amount" => $price * 100,
                 "currency" => "usd",
                 "source" => $request->stripeToken,
                 "description" => "Test payment" 
@@ -30,9 +34,9 @@ class stripeController extends Controller
       
         $paymenyResponse = $charge->jsonSerialize();
 
-            echo "<pre>";
-            print_r($paymenyResponse);
-            die;
+            // echo "<pre>";
+            // print_r($paymenyResponse);
+            // die;
 
 
             // check whether the payment is successful
@@ -40,36 +44,45 @@ class stripeController extends Controller
 
 
                 $order = new order();
-                // $payment = new payment();
+                $payment = new payments();
 
 
                 $order->name = $request['name'];
                 $order->email = $request['email'];
+                $order->phonenumber = $request['phonenumber'];
+                $order->zipcode = $request['zipcode'];
+                $order->city = $request['city'];
+                $order->state = $request['state'];
                 $order->address = $request['address'];
                 $order->product_id =  $product_id;
                 $order->qty =  1;
                 $order->total_price = $price;
-                $order->payment_type = "stripe";
-                $order->payment_status = "succeeded";
+                $order->payment_type =  $paymenyResponse['calculated_statement_descriptor'];
+                $order->payment_status = $paymenyResponse['status'] ;
                 $order->save();
                 $lastinsertedId = $order->id;
 
                 // transaction details 
-                //  $balanceTransaction = $paymenyResponse['balance_transaction'];
-                //  $paidCurrency = $paymenyResponse['currency'];
-                //  $paymentStatus = $paymenyResponse['status'];
-                    // $charge_id = paymenyResponse['id'];
+                 $balanceTransaction = $paymenyResponse['balance_transaction'];
+                 $paidCurrency = $paymenyResponse['currency'];
+                 $paymentStatus = $paymenyResponse['status'];
+                 $charge_id = $paymenyResponse['id'];
 
-                //  $payment->order_id = $lastinsertedId;
-                //  $payment->txn_id = $balanceTransaction;
-                //  $payment->amount = $price;
-                //  $payment->currency = $paidCurrency;
-                //  $payment->status = $paymentStatus;
-                //  $payment->save();
+                 $payment->order_id = $lastinsertedId;
+                 $payment->charge_id = $charge_id;
+                 $payment->txn_id = $balanceTransaction;
+                 $payment->amount = $price;
+                 $payment->currency = $paidCurrency;
+                 $payment->description = $paymenyResponse['description'];
+                 $payment->refunded_amount = $paymenyResponse['amount_refunded'];
+                 $payment->status = $paymentStatus;
+                 $payment->save();
 
-
-                Session::flash('success', 'Payment Successfull!, Your order has been placed');
-                return response()->redirectTo('/');
+                // Session::flash('success', 'Payment Successfull!, Your order has been placed');
+                return response()->redirectTo('/success')->with('success','Payment Successfull!');
+            }else{
+                Session::flash('error', 'Payment Unsuccessfull');
+                return redirect()->back();
             }
     }
 }

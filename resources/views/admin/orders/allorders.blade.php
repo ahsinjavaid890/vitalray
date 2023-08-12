@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('meta-tags')
-<title>All Freequences</title>
+<title>All Oders</title>
 @endsection
 @section('admin-content')
 @include('admin.alerts')
@@ -36,11 +36,11 @@
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
-                                                <th>Email</th>
+                                                
                                                 <th>Product</th>
                                                 <th>Quantiy</th>
                                                 <th>Price</th>
-                                                <th>Payment Mode</th>
+                        
                                                 <th>Payment Status</th>
                                                 <th>Created At</th>
                                                 <th>Action</th>
@@ -48,15 +48,20 @@
                                         </thead>
 
                                         <tbody>
-                                            @foreach($orders as $order)
+                                            @foreach($data as $order)
                                             <tr>
                                                 
                                                 <td>{{ $order->name }}</td>
-                                                <td>{{ $order->email }}</td>
-                                                <td>{{ DB::table('products')->where('id',$order->product_id)->first() }}</td>
+                                                
+                                                <td>{{ DB::table('products')->where('id',$order->product_id)->first()->name}}</td>
+                                                <td>{{ $order->qty}}</td>
+                                                <td>{{ $order->total_price}}</td>
+                                               
+                                                <td> <button class="btn btn-success btn-sm">{{ $order->payment_status}} </button> </td>
+                                                <td>{{ Cmf::date_format($order->created_at) }}</td>
                                                 <td>
-                                                    <a href="{{ url('admin/freequency/edit') }}/{{ $r->id }}" class="action-icon"> <i class="mdi mdi-pencil"></i></a>
-                                                    <a onclick="deletefunction({{ $r->id }})" href="javascript:void(0)" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                                   
+                                                    <a href="{{url('admin/order/orderdetail')}}/{{$order->id}}" class="btn btn-primary btn-sm" >View</a>
                                                 </td>
                                             </tr>
                                             @endforeach

@@ -24,8 +24,18 @@ use App\Models\Chat;
 // Admin
 
 
-Route::get('/paypalpayement/{id}', [PayPalController::class, 'postPaymentWithpaypal'])->name('paypal');
-Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('status');
+// Route::get('/paypalpayement/{id}', [PayPalController::class, 'postPaymentWithpaypal'])->name('paypal');
+// Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('status');
+
+
+Route::post('/payment', [App\Http\Controllers\OrderController::class, 'payment']);
+
+
+Route::post('data', [PayPalController::class, 'data'])->name('data');
+Route::get('create-transaction', [PayPalController::class, 'createTransaction'])->name('createTransaction');
+Route::get('process-transaction', [PayPalController::class, 'processTransaction'])->name('processTransaction');
+Route::get('success-transaction', [PayPalController::class, 'successTransaction'])->name('successTransaction');
+Route::get('cancel-transaction', [PayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
 
 
 Route::middleware("auth")->group(function () {
@@ -46,6 +56,7 @@ Route::get('/', [SiteController::class, 'indexview'])->name('home');
 Route::get('/product/detail/{id}', [SiteController::class, 'productdetail']);
 Route::get('/checkout/{id}', [SiteController::class, 'checkout']);
 Route::post('/stripepayment', [stripeController::class, 'stripePost'])->name("stripe.post");
+Route::get('/success', [stripeController::class, 'success'])->name("success");
 
 Route::get('/about-us', [SiteController::class, 'aboutus']);
 Route::get('/privacy-policy', [SiteController::class, 'privacypolicy']);
@@ -300,6 +311,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::group(['prefix' => 'order'], function () { 
         Route::get('/allorders', [AdminController::class, 'allorders']);
+        Route::get('/orderdetail/{id}', [AdminController::class, 'orderdetail']);
     });
 
 

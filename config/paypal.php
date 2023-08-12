@@ -1,12 +1,25 @@
-<?php 
-return [ 
-    'client_id' => 'AelLckomKMUKZiTpsSaRWrvISJKL-Cj9MC0BtII5Af-84V1_jktIwSjD2Wn3CHo2kxPjusjvvhBd854x',
-	'secret' => 'EJZLUk8AOWrfP8rvUtMbTeyUfcC2VyQPPhnzBNk30chrgcOk5QFZTwa-you6QO3zI3ipy0Rxj3ROVTVi',
-    'settings' => array(
-        'mode' => 'sandbox',
-        'http.ConnectionTimeOut' => 1000,
-        'log.LogEnabled' => true,
-        'log.FileName' => storage_path() . '/logs/paypal.log',
-        'log.LogLevel' => 'FINE'
-    ),
+<?php
+/**
+ * PayPal Setting & API Credentials
+ * Created by Raza Mehdi <srmk@outlook.com>.
+ */
+
+return [
+    'mode'    => env('PAYPAL_MODE', 'sandbox'), // Can only be 'sandbox' Or 'live'. If empty or invalid, 'live' will be used.
+    'sandbox' => [
+        'client_id'         => env('PAYPAL_SANDBOX_CLIENT_ID', 'ATtHE081gV_TUkPz_FGnTJ2rir7xsG29z9FJRFnwD36907HAlUk84VvqlUmM-TIV2WXuAxVnHr9YM928'),
+        'client_secret'     => env('PAYPAL_SANDBOX_CLIENT_SECRET', 'EHzofduWkn0HC2B20Kpkd8jm6fysXYjyRn5ohgJTMw2iNwvk3jxdMIBeIlI5G7WtLU-772zDVDhzMJLu'),
+        'app_id'            => 'APP-80W284485P519543T',
+    ],
+    'live' => [
+        'client_id'         => env('PAYPAL_LIVE_CLIENT_ID', ''),
+        'client_secret'     => env('PAYPAL_LIVE_CLIENT_SECRET', ''),
+        'app_id'            => env('PAYPAL_LIVE_APP_ID', ''),
+    ],
+
+    'payment_action' => env('PAYPAL_PAYMENT_ACTION', 'Sale'), // Can only be 'Sale', 'Authorization' or 'Order'
+    'currency'       => env('PAYPAL_CURRENCY', 'USD'),
+    'notify_url'     => env('PAYPAL_NOTIFY_URL', ''), // Change this accordingly for your application.
+    'locale'         => env('PAYPAL_LOCALE', 'en_US'), // force gateway language  i.e. it_IT, es_ES, en_US ... (for express checkout only)
+    'validate_ssl'   => env('PAYPAL_VALIDATE_SSL', true), // Validate SSL when creating api client.
 ];

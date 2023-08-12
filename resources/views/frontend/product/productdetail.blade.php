@@ -275,7 +275,7 @@
 
 
                 <div class="product-price">
-                    <p class="new-price mb-0">New Price: Rs {{$product->price}}</p>
+                    <p class="new-price mb-0">New Price: {{$product->price}} USD</p>
                 </div>
 
                 <div class="product-detail">
