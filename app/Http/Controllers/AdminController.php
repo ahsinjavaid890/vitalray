@@ -1186,4 +1186,10 @@ class AdminController extends Controller
         $data = order::where('id',$id)->first();
         return view('admin.orders.orderdetail')->with(array('data'=>$data));
     }
+
+    public function orderdelete($id){
+        order::where('id',$id)->delete();
+        payments::where('order_id',$id)->delete();
+        return redirect()->back()->with('message', 'Order Deleted Successfully');
+    }
 }

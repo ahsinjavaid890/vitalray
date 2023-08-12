@@ -28,7 +28,7 @@ Route::get('/paypalpayement/{id}', [PayPalController::class, 'postPaymentWithpay
 Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('status');
 
 
-Route::post('/payment', [App\Http\Controllers\OrderController::class, 'payment']);
+// Route::post('/payment', [App\Http\Controllers\OrderController::class, 'payment']);
 
 
 Route::post('data', [PayPalController::class, 'data'])->name('data');
@@ -312,6 +312,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['prefix' => 'order'], function () { 
         Route::get('/allorders', [AdminController::class, 'allorders']);
         Route::get('/orderdetail/{id}', [AdminController::class, 'orderdetail']);
+        Route::get('/orderdelete/{id}', [AdminController::class, 'orderdelete']);
     });
 
 

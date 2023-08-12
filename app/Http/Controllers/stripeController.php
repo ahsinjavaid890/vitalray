@@ -59,6 +59,8 @@ class stripeController extends Controller
                 $order->total_price = $price;
                 $order->payment_type =  $paymenyResponse['calculated_statement_descriptor'];
                 $order->payment_status = $paymenyResponse['status'] ;
+                $order->order_status = "Pending";
+                $order->new_status =  "1";
                 $order->save();
                 $lastinsertedId = $order->id;
 

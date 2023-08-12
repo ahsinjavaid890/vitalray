@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="col-6 text-right">
                                         <h5>
-                                            Invoice to 
+                                            Customer Information
                                         </h5>
                                         <p style="margin-bottom: 0px">Fullname : {{$data->name}}</p>
                                         <p style="margin-bottom: 0px">Email : {{ $data->email
@@ -75,10 +75,7 @@
                                         <tbody>
 
                                             <tr>
-
-                                            
-
-                                                <td>
+                                                 <td>
                                                     {{ 
                                                         DB::table('products')->where('id',$data->product_id)->first()->name }}
                                                 </td>
@@ -109,26 +106,5 @@
 
 </div> <!-- content-page -->
 
-<script type="text/javascript">
-    function deletefunction(id)
-    {
-        Swal.fire({
-          title: 'Are You Sure?',
-          icon: 'warning',
-          html: '',
-          showDenyButton: false,
-          showCancelButton: true,
-          confirmButtonText: 'Delete',
-          denyButtonText: `Don't save`,
-        }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
-          if (result.isConfirmed) {
-                var deletedurl = "{{ url('admin/freequency/delete/') }}/"+id;
-                window.location.replace(deletedurl);
-          } else if (result.isDenied) {
-            Swal.fire('Changes are not saved', '', 'info')
-          }
-        })
-    }
-</script>
+
 @endsection
