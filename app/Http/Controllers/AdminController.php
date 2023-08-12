@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Helpers\Cmf;
 use Illuminate\Http\Request;
 use App\Models\modules;
@@ -47,6 +49,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Image;
 use Illuminate\Support\Facades\Hash;
 use Stripe;
+
 class AdminController extends Controller
 {
     public function __construct()
@@ -55,44 +58,40 @@ class AdminController extends Controller
     }
     public function admindashboard()
     {
-        if(Auth::user()->user_type == 'admin')
-        {
-            $users = user::where('user_type' , 'customer')->get();
-            return view('admin.dashboard.index')->with(array('data'=>$users));
-        }
-        else
-        {
+        if (Auth::user()->user_type == 'admin') {
+            $users = user::where('user_type', 'customer')->get();
+            return view('admin.dashboard.index')->with(array('data' => $users));
+        } else {
             return redirect()->back()->with('warning', "you do not have Permission to Access Admin");
         }
-        
     }
     public function checkorderofquiz($id)
     {
-        $check = quizes::where('order' , $id)->count();
+        $check = quizes::where('order', $id)->count();
         return $check;
     }
     public function deletequesquestion($id)
     {
-        quizefields::where('quiz_parent' , $id)->delete();
-        quizes::where('id' , $id)->delete();
+        quizefields::where('quiz_parent', $id)->delete();
+        quizes::where('id', $id)->delete();
         return redirect()->back()->with('message', 'Quiz Question Deleted Successfully');
     }
     public function newusers()
     {
-        $users = user::where('delete_status'  , 'active')->get();
-        return view('admin.users.requests')->with(array('data'=>$users));
+        $users = user::where('delete_status', 'active')->get();
+        return view('admin.users.requests')->with(array('data' => $users));
     }
 
     public function declinerequests()
     {
         $data = deniedrequests::groupby('user_id')->get();
-        return view('admin.users.deniedrequest')->with(array('data'=>$data));
+        return view('admin.users.deniedrequest')->with(array('data' => $data));
     }
 
     public function users()
     {
-        $users = user::where('delete_status' , 'active')->get();
-        return view('admin.users.all')->with(array('data'=>$users));
+        $users = user::where('delete_status', 'active')->get();
+        return view('admin.users.all')->with(array('data' => $users));
     }
 
 
@@ -116,19 +115,19 @@ class AdminController extends Controller
     }
     public function allfreequencies()
     {
-        $data = freequencies::orderby('id' , 'desc')->paginate(10);
-        return view('admin.freequency.all')->with(array('data'=>$data));
+        $data = freequencies::orderby('id', 'desc')->paginate(10);
+        return view('admin.freequency.all')->with(array('data' => $data));
     }
     public function editfreequency($id)
     {
-        $data = DB::table('freequencies')->where('id' , $id)->get()->first();
-        return view('admin.freequency.edit')->with(array('data'=>$data));
+        $data = DB::table('freequencies')->where('id', $id)->get()->first();
+        return view('admin.freequency.edit')->with(array('data' => $data));
     }
-    
+
 
     public function deletefreequency($id)
     {
-        DB::table('freequencies')->where('id' , $id)->delete();
+        DB::table('freequencies')->where('id', $id)->delete();
         return redirect()->back()->with('message', 'freequency Deleted Successfully');
     }
 
@@ -137,12 +136,10 @@ class AdminController extends Controller
         $add = freequencies::find($request->id);
         $add->name  = $request->name;
         $add->slug  = Cmf::shorten_url($request->name);
-        if($request->freequency)
-        {
+        if ($request->freequency) {
             $add->freequency  = Cmf::sendimagetodirectory($request->freequency);
         }
-        if($request->image)
-        {
+        if ($request->image) {
             $add->image  = Cmf::sendimagetodirectory($request->image);
         }
         $add->vibration  = $request->vibration;
@@ -155,12 +152,12 @@ class AdminController extends Controller
 
     public function allproducts()
     {
-        $data = DB::table('products')->orderby('id' , 'desc')->get();
-        return view('admin.products.all')->with(array('data'=>$data));
+        $data = DB::table('products')->orderby('id', 'desc')->get();
+        return view('admin.products.all')->with(array('data' => $data));
     }
     public function addproduct()
     {
-       return view('admin.products.addproduct');
+        return view('admin.products.addproduct');
     }
     public function createproduct(Request $request)
     {
@@ -174,8 +171,7 @@ class AdminController extends Controller
         $add->document = Cmf::sendimagetodirectory($request->document);
         $add->save();
 
-        if($request->gallaryimages)
-        {
+        if ($request->gallaryimages) {
             foreach ($request->gallaryimages as $r) {
                 $gallaryimage = new products_images();
                 $gallaryimage->product_id = $add->id;
@@ -194,12 +190,10 @@ class AdminController extends Controller
         $add->short_description = $request->short_description;
         $add->description = $request->description;
         $add->price = $request->price;
-        if($request->image)
-        {
+        if ($request->image) {
             $add->image = Cmf::sendimagetodirectory($request->image);
         }
-        if($request->document)
-        {
+        if ($request->document) {
             $add->document = Cmf::sendimagetodirectory($request->document);
         }
         $add->save();
@@ -209,25 +203,27 @@ class AdminController extends Controller
 
     public function editproduct($id)
     {
-        $data = DB::table('products')->where('id' , $id)->get()->first();
-        return view('admin.products.edit')->with(array('data'=>$data));
+        $data = DB::table('products')->where('id', $id)->get()->first();
+        return view('admin.products.edit')->with(array('data' => $data));
     }
 
-    public function deleteproduct(Request $request){
-        DB::table('products')->where('id',$request->id)->delete();
+    public function deleteproduct(Request $request)
+    {
+        DB::table('products')->where('id', $request->id)->delete();
         return redirect()->back();
     }
 
-    public function deletegalleryimage($id){
-        DB::table('products_images')->where('id',$id)->delete();
+    public function deletegalleryimage($id)
+    {
+        DB::table('products_images')->where('id', $id)->delete();
         return redirect()->back();
     }
 
-    public function updategallaryimages(Request $request){
+    public function updategallaryimages(Request $request)
+    {
         // $add = DB::table('products_images')->where('product_id' , $request->id);
-   
-        if($request->gallaryimages)
-        {
+
+        if ($request->gallaryimages) {
             foreach ($request->gallaryimages as $r) {
                 // $gallaryimage = products_images::where('product_id' , $request->id)->first();
                 $gallaryimage = new products_images();
@@ -243,8 +239,8 @@ class AdminController extends Controller
 
     public function allquizes()
     {
-        $data = DB::table('quizes')->where('delete_status' , 'active')->where('published_status' , 'published')->orderby('order' , 'asc')->get();
-        return view('admin.quizes.all')->with(array('data'=>$data));
+        $data = DB::table('quizes')->where('delete_status', 'active')->where('published_status', 'published')->orderby('order', 'asc')->get();
+        return view('admin.quizes.all')->with(array('data' => $data));
     }
 
     public function createquiz(Request $request)
@@ -259,44 +255,33 @@ class AdminController extends Controller
         $quize->save();
 
 
-        if($request->type == 'radio')
-        {
-            if(!empty($request->signupfieldschilds))
-            {
+        if ($request->type == 'radio') {
+            if (!empty($request->signupfieldschilds)) {
                 foreach ($request->signupfieldschilds as $r) {
-                    if(!empty($r))
-                    {
+                    if (!empty($r)) {
                         $quizefields = new quizefields;
                         $quizefields->name = $r;
                         $quizefields->quiz_parent = $quize->id;
                         $quizefields->save();
                     }
-                    
                 }
-            }else{
-
+            } else {
             }
-            
         }
 
-        if($request->type == 'checkbox')
-        {
-            if(!empty($request->signupfieldschilds))
-            {
+        if ($request->type == 'checkbox') {
+            if (!empty($request->signupfieldschilds)) {
                 foreach ($request->signupfieldschilds as $r) {
-                    if(!empty($r))
-                    {
+                    if (!empty($r)) {
                         $quizefields = new quizefields;
                         $quizefields->name = $r;
                         $quizefields->quiz_parent = $quize->id;
                         $quizefields->save();
                     }
                 }
-            }else{
-                
+            } else {
             }
-        }else{
-            
+        } else {
         }
 
         return redirect()->back()->with('message', 'New Quiz Field Created Successfully');
@@ -315,32 +300,28 @@ class AdminController extends Controller
     }
     public function createuserrole(Request $request)
     {
-        $rand = rand('1000' , '2000000');
+        $rand = rand('1000', '2000000');
         $role = new roles;
         $role->id = $rand;
         $role->name = $request->name;
         $role->save();
-        foreach($request->parent as $r)
-        {
+        foreach ($request->parent as $r) {
             DB::statement("INSERT INTO `rolesparent` (`userroles`,`parentid`)VALUES ('$rand', '$r')");
         }
-        foreach($request->child as $r)
-        {
+        foreach ($request->child as $r) {
             DB::statement("INSERT INTO `childroles` (`module`,`role`)VALUES ('$r', '$rand')");
         }
         return redirect()->back()->with('message', 'Role Added Successfully');
     }
     public function updateuserrole(Request $request)
     {
-        DB::table('rolesparent')->where('userroles' , $request->id)->delete();
-        DB::table('childroles')->where('role' , $request->id)->delete();
+        DB::table('rolesparent')->where('userroles', $request->id)->delete();
+        DB::table('childroles')->where('role', $request->id)->delete();
         $rand = $request->id;
-        foreach($request->parent as $r)
-        {
+        foreach ($request->parent as $r) {
             DB::statement("INSERT INTO `rolesparent` (`userroles`,`parentid`)VALUES ('$rand', '$r')");
         }
-        foreach($request->child as $r)
-        {
+        foreach ($request->child as $r) {
             DB::statement("INSERT INTO `childroles` (`module`,`role`)VALUES ('$r' , '$rand')");
         }
         return redirect()->back()->with('message', 'Role Updated Successfully');
@@ -349,12 +330,9 @@ class AdminController extends Controller
     {
 
         $email = $request->email;
-        if(DB::table('users')->where('email' , $email)->count() > 0)
-        {
+        if (DB::table('users')->where('email', $email)->count() > 0) {
             return redirect()->back()->with('warning', 'This Email is Already Exist in System');
-        }
-        else
-        {
+        } else {
             $user = new user;
             $user->name = $request->name;
             $user->email = $request->email;
@@ -366,7 +344,7 @@ class AdminController extends Controller
             $user->is_admin = 1;
             $user->active = 1;
             $user->role_id = $request->userroleid;
-            $user->password = Hash::make($request->password);            
+            $user->password = Hash::make($request->password);
             $user->save();
             return redirect()->back()->with('message', 'User Added Successfully');
         }
@@ -383,20 +361,18 @@ class AdminController extends Controller
         $user->is_admin = 1;
         $user->active = 1;
         $user->role_id = $request->userroleid;
-        if(!empty($request->password))
-        {
+        if (!empty($request->password)) {
             $user->password = Hash::make($request->password);
         }
         $user->save();
         return redirect()->back()->with('message', 'User Added Successfully');
     }
-    public function changetopublishuser($one , $two)
+    public function changetopublishuser($one, $two)
     {
-        if($two == 1)
-        {
-            $data = array('active'=>0);
-        }else{
-            $data = array('active'=>1);
+        if ($two == 1) {
+            $data = array('active' => 0);
+        } else {
+            $data = array('active' => 1);
         }
         user::where('id', $one)->update($data);
     }
@@ -404,36 +380,34 @@ class AdminController extends Controller
 
     /****************************************************
                    Dynamic Pages
-    *****************************************************/
+     *****************************************************/
     public function addpage()
     {
         return view('admin.pages.addnewpage');
     }
     public function allpages()
     {
-        $data = dynamicpages::where('delete_status' , 'Active')->get();
+        $data = dynamicpages::where('delete_status', 'Active')->get();
         $viewstatus = 'all';
-        return view('admin.pages.allpages')->with(array('data'=>$data,'viewstatus'=>$viewstatus));
+        return view('admin.pages.allpages')->with(array('data' => $data, 'viewstatus' => $viewstatus));
     }
     public function allpageswithid($id)
     {
-        if($id == 'published')
-        {
-            $data = dynamicpages::where('delete_status' , 'Active')->where('visible_status' , 'Published')->get();
+        if ($id == 'published') {
+            $data = dynamicpages::where('delete_status', 'Active')->where('visible_status', 'Published')->get();
         }
-        if($id == 'notpublished')
-        {
-            $data = dynamicpages::where('delete_status' , 'Active')->where('visible_status' , 'Not Published')->get();
+        if ($id == 'notpublished') {
+            $data = dynamicpages::where('delete_status', 'Active')->where('visible_status', 'Not Published')->get();
         }
-        
+
         $viewstatus = $id;
-        return view('admin.pages.allpages')->with(array('data'=>$data,'viewstatus'=>$viewstatus));
+        return view('admin.pages.allpages')->with(array('data' => $data, 'viewstatus' => $viewstatus));
     }
 
     public function editpage($id)
     {
-        $data = dynamicpages::where('id' , $id)->get()->first();
-        return view('admin.pages.editpage')->with(array('data'=>$data));
+        $data = dynamicpages::where('id', $id)->get()->first();
+        return view('admin.pages.editpage')->with(array('data' => $data));
     }
     public function createdynamicpage(Request $request)
     {
@@ -444,34 +418,34 @@ class AdminController extends Controller
         // }
         // else
         // {
-            $dynamicpages = new dynamicpages;
-            $dynamicpages->name = $name;
-            $dynamicpages->slug = $request->slug;
-            $dynamicpages->content = $request->content;
-            $dynamicpages->show_on_footer = $request->show_on_footer;
-            $dynamicpages->show_bellow = $request->show_bellow;
-            $dynamicpages->visible_order = 0;
-            $dynamicpages->metta_tittle = $request->metta_tittle;
-            $dynamicpages->metta_description = $request->metta_description;
-            $dynamicpages->metta_keywords = $request->metta_keywords;            
-            $dynamicpages->delete_status = 'Active';
-            $dynamicpages->added_by = 1;
-            $dynamicpages->visible_status = $request->visible_status;
-            $dynamicpages->save();
-            // Cmf::savesiteurl($request->slug , 'dynamicpages');
-            return redirect()->back()->with('message', 'Page Successfully Inserted');
+        $dynamicpages = new dynamicpages;
+        $dynamicpages->name = $name;
+        $dynamicpages->slug = $request->slug;
+        $dynamicpages->content = $request->content;
+        $dynamicpages->show_on_footer = $request->show_on_footer;
+        $dynamicpages->show_bellow = $request->show_bellow;
+        $dynamicpages->visible_order = 0;
+        $dynamicpages->metta_tittle = $request->metta_tittle;
+        $dynamicpages->metta_description = $request->metta_description;
+        $dynamicpages->metta_keywords = $request->metta_keywords;
+        $dynamicpages->delete_status = 'Active';
+        $dynamicpages->added_by = 1;
+        $dynamicpages->visible_status = $request->visible_status;
+        $dynamicpages->save();
+        // Cmf::savesiteurl($request->slug , 'dynamicpages');
+        return redirect()->back()->with('message', 'Page Successfully Inserted');
         // }
     }
     public function updatepage(Request $request)
     {
-         $url = $request->slug;
+        $url = $request->slug;
         // $savedurl = DB::table('siteurls')->where('url', $url)->where('modulename' , 'dynamicpages')->first();
         // if(empty($savedurl))
         // {
         //     DB::statement("INSERT INTO `siteurls` (`url`, `modulename`)VALUES ('$url', 'dynamicpages')");
         // }
 
-        $data = array('show_bellow'=>$request->show_bellow,'visible_order'=>$request->visible_order,'show_on_footer'=>$request->show_on_footer,'slug'=>$url,'name'=>$request->name,'content'=>$request->content,'metta_tittle'=>$request->metta_tittle,'metta_description'=>$request->metta_description,'metta_keywords'=>$request->metta_keywords,'visible_status'=>$request->visible_status);
+        $data = array('show_bellow' => $request->show_bellow, 'visible_order' => $request->visible_order, 'show_on_footer' => $request->show_on_footer, 'slug' => $url, 'name' => $request->name, 'content' => $request->content, 'metta_tittle' => $request->metta_tittle, 'metta_description' => $request->metta_description, 'metta_keywords' => $request->metta_keywords, 'visible_status' => $request->visible_status);
         $id =  $request->id;
         dynamicpages::where('id', $id)->update($data);
         return redirect()->back()->with('message', 'Page Updated Successfully');
@@ -479,22 +453,22 @@ class AdminController extends Controller
 
     public function deletepage($id)
     {
-        $data = DB::table('dynamicpages')->where('id' , $id)->get()->first();
-        DB::table('dynamicpages')->where('id' , $id)->delete();
+        $data = DB::table('dynamicpages')->where('id', $id)->get()->first();
+        DB::table('dynamicpages')->where('id', $id)->delete();
         return redirect()->back()->with('message', 'Page Deleted Successfully');
     }
-    
 
 
 
 
-    
+
+
     // Subscription Plans
-    
+
     public function userplans()
     {
         $data = DB::table('subscriptionplans')->get();
-        return view('admin.subscriptions.userplans')->with(array('data'=>$data));
+        return view('admin.subscriptions.userplans')->with(array('data' => $data));
     }
     public function createplan(Request $request)
     {
@@ -519,11 +493,11 @@ class AdminController extends Controller
     }
     public function editplan($id)
     {
-        $data = subscriptionplans::where('id' , $id)->get()->first();
-        return view('admin.subscriptions.edit.editplan')->with(array('data'=>$data));
+        $data = subscriptionplans::where('id', $id)->get()->first();
+        return view('admin.subscriptions.edit.editplan')->with(array('data' => $data));
     }
 
-    public function planstatus($id , $two)
+    public function planstatus($id, $two)
     {
         $plan = subscriptionplans::find($two);
         $plan->status = $id;
@@ -535,11 +509,11 @@ class AdminController extends Controller
 
     /****************************************************
                    Plan Module
-    *****************************************************/
+     *****************************************************/
     public function allplans()
     {
         $data = Plan::all();
-        return view('admin.plans.all')->with(array('data'=>$data));
+        return view('admin.plans.all')->with(array('data' => $data));
     }
     public function updateplan(Request $request)
     {
@@ -553,16 +527,16 @@ class AdminController extends Controller
     }
     public function deleteblogcategory($id)
     {
-        blogs::where('cat_id' , $id)->update(['delete_status'=>'trash']);
-        $data = array('delete_status'=>'trash');
-        blogcategories::where('id' ,$id)->update($data);
+        blogs::where('cat_id', $id)->update(['delete_status' => 'trash']);
+        $data = array('delete_status' => 'trash');
+        blogcategories::where('id', $id)->update($data);
         return redirect()->back()->with('message', 'Blog Category Move To Trash');
     }
     public function deleteblogcategorypermanently($id)
     {
-        blogs::where('cat_id' , $id)->update(['delete_status'=>'Delete']);
-        $data = array('delete_status'=>'Delete');
-        blogcategories::where('id' ,$id)->update($data);
+        blogs::where('cat_id', $id)->update(['delete_status' => 'Delete']);
+        $data = array('delete_status' => 'Delete');
+        blogcategories::where('id', $id)->update($data);
         return redirect()->back()->with('message', 'Blog Category Deleted Successfully');
     }
     public function addblog()
@@ -583,15 +557,13 @@ class AdminController extends Controller
         $saveblog->delete_status = 'Active';
         $saveblog->save();
         return redirect()->back()->with('message', 'Blog Category Successfully Inserted');
-        
     }
     public function updateblogcategory(Request $request)
     {
         $saveblog = blogcategories::find($request->id);
         $saveblog->name = $request->name;
         $saveblog->slug = $request->slug;
-        if($request->image)
-        {
+        if ($request->image) {
             $saveblog->image = Cmf::sendimagetodirectory($request->image);
         }
         $saveblog->visible_status = $request->visible_status;
@@ -601,13 +573,13 @@ class AdminController extends Controller
     }
     public function editblogcategory($id)
     {
-        $data = blogcategories::where('id' , $id)->get()->first();
-        return view('admin.blogs.editcategory')->with(array('data'=>$data));
+        $data = blogcategories::where('id', $id)->get()->first();
+        return view('admin.blogs.editcategory')->with(array('data' => $data));
     }
     public function restoreblogcategory($id)
     {
-        $data = array('delete_status'=>'Active');
-        blogcategories::where('id' ,$id)->update($data);
+        $data = array('delete_status' => 'Active');
+        blogcategories::where('id', $id)->update($data);
         return redirect()->back()->with('message', 'Blog Category Move To Publish');
     }
     public function createblog(Request $request)
@@ -625,41 +597,41 @@ class AdminController extends Controller
     }
     public function blogs(Request $request)
     {
-        $data = blogs::where('delete_status' ,'Active')->get();
-        return view('admin.blogs.all')->with(array('data'=>$data));
+        $data = blogs::where('delete_status', 'Active')->get();
+        return view('admin.blogs.all')->with(array('data' => $data));
     }
     public function blogcoments()
     {
-        $data = DB::table('blogcoments')->where('delete_status' , 'Active')->orderby('created_at' , 'desc')->get();
-        return view('admin.blogs.blogcoment')->with(array('data'=>$data));
+        $data = DB::table('blogcoments')->where('delete_status', 'Active')->orderby('created_at', 'desc')->get();
+        return view('admin.blogs.blogcoment')->with(array('data' => $data));
     }
     public function editblogcoment($id)
     {
-        $data = array('newstatus'=>'old');
-        DB::table('blogcoments')->where('id' , $id)->update($data);
-        $data = DB::table('blogcoments')->where('id' , $id)->get()->first();
-        return view('admin.blogs.editblogcoment')->with(array('data'=>$data));
+        $data = array('newstatus' => 'old');
+        DB::table('blogcoments')->where('id', $id)->update($data);
+        $data = DB::table('blogcoments')->where('id', $id)->get()->first();
+        return view('admin.blogs.editblogcoment')->with(array('data' => $data));
     }
     public function updateblogcoment(Request $request)
     {
-        $data = array('coment'=>$request->coment,'visible_status'=>$request->visible_status);
-        DB::table('blogcoments')->where('id' , $request->id)->update($data);
+        $data = array('coment' => $request->coment, 'visible_status' => $request->visible_status);
+        DB::table('blogcoments')->where('id', $request->id)->update($data);
         return redirect()->back()->with('message', 'Comment Updated Successfully');
     }
     public function deleteblogcoment($id)
     {
-        DB::table('blogcoments')->where('id' , $id)->delete();
+        DB::table('blogcoments')->where('id', $id)->delete();
         return redirect()->back()->with('message', 'Comment Deleted Successfully');
     }
     public function deleteblogcomentreply($id)
     {
-        DB::table('comentreply')->where('id' , $id)->delete();
+        DB::table('comentreply')->where('id', $id)->delete();
         return redirect()->back()->with('message', 'Comment Reply Deleted Successfully');
     }
     public function deleteblog($id)
     {
         $data = blogs::where('id', $id)->get()->first();
-        $array = array('delete_status'=>'Delete');
+        $array = array('delete_status' => 'Delete');
         blogs::where('id', $id)->update($array);
         return redirect()->back()->with('message', 'Blog Delete Successfully');
     }
@@ -670,8 +642,8 @@ class AdminController extends Controller
     }
     public function editblog($id)
     {
-        $data = blogs::where('id' ,$id)->get()->first();
-        return view('admin.blogs.edit-blog')->with(array('data'=>$data));
+        $data = blogs::where('id', $id)->get()->first();
+        return view('admin.blogs.edit-blog')->with(array('data' => $data));
     }
     public function updateblog(Request $request)
     {
@@ -683,8 +655,7 @@ class AdminController extends Controller
         $saveblog->delete_status = 'Active';
         $saveblog->visible_status = 'Published';
         $saveblog->cat_id = $request->cat_id;
-        if($request->image)
-        {
+        if ($request->image) {
             $saveblog->image = Cmf::sendimagetodirectory($request->image);
         }
         $saveblog->save();
@@ -695,7 +666,7 @@ class AdminController extends Controller
     public function userdetail($id)
     {
         $data = User::find($id);
-        return view('admin.users.userdetail')->with(array('data'=>$data));
+        return view('admin.users.userdetail')->with(array('data' => $data));
     }
 
     // Notification
@@ -703,15 +674,15 @@ class AdminController extends Controller
 
     public function shownotification()
     {
-        $data = DB::table('adminnotification')->where('status' , 1)->orderby('id' , 'desc')->limit(10)->get();
+        $data = DB::table('adminnotification')->where('status', 1)->orderby('id', 'desc')->limit(10)->get();
 
         foreach ($data as $r) {
-            echo '<a onclick="statuschange('.$r->id.')" target="_blank" href="'.$r->url.'" class="dropdown-item notify-item">
+            echo '<a onclick="statuschange(' . $r->id . ')" target="_blank" href="' . $r->url . '" class="dropdown-item notify-item">
         <div class="notify-icon bg-primary">
-            '.$r->icon.'
+            ' . $r->icon . '
         </div>
-        <p class="notify-details">'.$r->notification.'
-            <small class="text-muted">'.$r->created_at.'</small>
+        <p class="notify-details">' . $r->notification . '
+            <small class="text-muted">' . $r->created_at . '</small>
         </p>
     </a>';
         }
@@ -722,32 +693,30 @@ class AdminController extends Controller
         $update = User::find($request->id);
         $update->active = $request->status;
         $update->save();
-        Mail::send('frontend.email.statuschange', ['email' => $update->email , 'name' => $update->name, 'status' => $request->status], function($message) use($update){
-              $message->to($update->email);
-              $message->subject('Profile Status Is Changed');
+        Mail::send('frontend.email.statuschange', ['email' => $update->email, 'name' => $update->name, 'status' => $request->status], function ($message) use ($update) {
+            $message->to($update->email);
+            $message->subject('Profile Status Is Changed');
         });
         return redirect()->back()->with('message', 'Status Updated Successfully');
-
     }
 
     public function getadminnotification()
     {
-        $data = DB::table('adminnotification')->where('status' , 1)->where('alertstatus' , 1)->orderby('id' , 'desc')->get()->first();
-        DB::table('adminnotification')->where('status' , 1)->where('alertstatus' , 1)->orderby('id' , 'desc')->update(array('alertstatus'=>0));
-        if($data)
-        {
+        $data = DB::table('adminnotification')->where('status', 1)->where('alertstatus', 1)->orderby('id', 'desc')->get()->first();
+        DB::table('adminnotification')->where('status', 1)->where('alertstatus', 1)->orderby('id', 'desc')->update(array('alertstatus' => 0));
+        if ($data) {
             echo $data->notification;
         }
     }
     public function allreviews()
     {
         $data = product_reviews::all();
-        return view('admin.ecommerece.reviews.index')->with(array('data'=>$data));
+        return view('admin.ecommerece.reviews.index')->with(array('data' => $data));
     }
     public function reviewdetail($id)
     {
-        $data = product_reviews::where('id' , $id)->get()->first();
-        return view('admin.ecommerece.reviews.detail')->with(array('data'=>$data));
+        $data = product_reviews::where('id', $id)->get()->first();
+        return view('admin.ecommerece.reviews.detail')->with(array('data' => $data));
     }
 
 
@@ -766,8 +735,8 @@ class AdminController extends Controller
 
     public function alltickets()
     {
-        $data = tickets::where('type', 'vendor')->orderby('id' , 'desc')->paginate(10);
-        return view('admin.tickets.alltickets')->with(array('data'=>$data));
+        $data = tickets::where('type', 'vendor')->orderby('id', 'desc')->paginate(10);
+        return view('admin.tickets.alltickets')->with(array('data' => $data));
     }
 
 
@@ -795,9 +764,9 @@ class AdminController extends Controller
 
     public function viewticket($id)
     {
-        $ticket = tickets::where('id' , $id)->get()->first();
-        $ticketreplies = ticketreplies::where('ticket_id' , $id)->orderby('id' , 'asc')->get();
-        return view('admin.tickets.detail')->with(array('ticket'=>$ticket,'ticketreplies'=>$ticketreplies));
+        $ticket = tickets::where('id', $id)->get()->first();
+        $ticketreplies = ticketreplies::where('ticket_id', $id)->orderby('id', 'asc')->get();
+        return view('admin.tickets.detail')->with(array('ticket' => $ticket, 'ticketreplies' => $ticketreplies));
     }
 
 
@@ -806,17 +775,18 @@ class AdminController extends Controller
     // Menues
 
 
-     public function menueview(){
+    public function menueview()
+    {
         $menus = Menu::where('parent_id', '=', 0)->get();
         $allMenus = Menu::all();
-        return view('admin.menu.menuTreeview',compact('menus','allMenus'));
+        return view('admin.menu.menuTreeview', compact('menus', 'allMenus'));
     }
 
     public function menuestore(Request $request)
     {
         $request->validate([
-           'title' => 'required',
-           'url' => 'required',
+            'title' => 'required',
+            'url' => 'required',
         ]);
 
         $input = $request->all();
@@ -837,15 +807,15 @@ class AdminController extends Controller
 
     public function getmenu($id)
     {
-        $data = Menu::where('id' , $id)->get()->first();
+        $data = Menu::where('id', $id)->get()->first();
 
         $allMenus = Menu::all();
 
-        echo '<input type="hidden" name="id" value="'.$id.'" class="form-control">  <div class="row">
+        echo '<input type="hidden" name="id" value="' . $id . '" class="form-control">  <div class="row">
            <div class="col-md-12">
               <div class="form-group">
                  <label>Title</label>
-                 <input type="text" value="'.$data->title.'" name="title" class="form-control">   
+                 <input type="text" value="' . $data->title . '" name="title" class="form-control">   
               </div>
            </div>
         </div>
@@ -855,9 +825,9 @@ class AdminController extends Controller
                  <label>Url</label>
                  <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">'.url('').'</span>
+                      <span class="input-group-text">' . url('') . '</span>
                     </div>
-                    <input value="'.$data->url.'" type="text" class="form-control" name="url" placeholder="Enter URL">
+                    <input value="' . $data->url . '" type="text" class="form-control" name="url" placeholder="Enter URL">
                   </div>
               </div>
            </div>
@@ -869,35 +839,29 @@ class AdminController extends Controller
                  <select class="form-control" name="parent_id">
                     <option selected disabled>Select Parent Menu</option>';
 
-                    foreach($allMenus as $r)
-                    {
+        foreach ($allMenus as $r) {
 
-                       echo '<option ';
-
-
-
-                       if($data->parent_id != 0)
-                       {
-
-
-                            if($data->parent_id == $r->id)
-                            {
-                                echo "selected";
-                            }
+            echo '<option ';
 
 
 
-                       }
-                            
+            if ($data->parent_id != 0) {
+
+
+                if ($data->parent_id == $r->id) {
+                    echo "selected";
+                }
+            }
 
 
 
 
 
-                         echo ' value="'.$r->id.'">'.$r->title.'</option>';
-                    }
-            
-                echo '</select>
+
+            echo ' value="' . $r->id . '">' . $r->title . '</option>';
+        }
+
+        echo '</select>
               </div>
            </div>
         </div>
@@ -921,22 +885,23 @@ class AdminController extends Controller
 
 
     public function attributes_list()
-    {   
+    {
         $attributes = global_attributes::select(
             "global_attributes.id",
             "global_attributes.name",
             "global_attributes.values",
-            "global_attributes.status")
+            "global_attributes.status"
+        )
             ->paginate(10);
-        return view('admin.ecommerece.attributes.all',compact("attributes"));
+        return view('admin.ecommerece.attributes.all', compact("attributes"));
     }
 
     public function editattributes($id)
-    {   
-        
-        $attributes = global_attributes::find($id); 
-        $attributes->values = explode(',', $attributes->values);      
-        return view('admin.ecommerece.attributes.edit',compact("attributes"));
+    {
+
+        $attributes = global_attributes::find($id);
+        $attributes->values = explode(',', $attributes->values);
+        return view('admin.ecommerece.attributes.edit', compact("attributes"));
     }
 
 
@@ -944,52 +909,46 @@ class AdminController extends Controller
     public function store_attributes(Request $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input,[ 
+        $validator = Validator::make($input, [
             'name'  => 'required',
             'attribute_name'  => 'required',
         ]);
 
-        if($validator->fails())
-        return redirect()->back()->with('errors', $validator->errors()); 
+        if ($validator->fails())
+            return redirect()->back()->with('errors', $validator->errors());
         $attributes = new global_attributes;
         $attributes->name = $input['name'];
         $attributes->values = implode(',', $input['attribute_name']);
         $attributes->status = 1;
         $created = $attributes->save();
-        if($created)
-        {
+        if ($created) {
             return redirect()->back()->with('message', 'Attribute Added Successfully');
-        }
-        else
-        {
+        } else {
             return back()->with('faild', 'Something went Wrong!')->withInput();
-        } 
+        }
     }
 
     public function updateattributes(Request $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input,[ 
+        $validator = Validator::make($input, [
             'name'  => 'required',
             'attribute_name'  => 'required',
         ]);
 
-        if($validator->fails())
-         return redirect()->back()->with('errors', $validator->errors()); 
+        if ($validator->fails())
+            return redirect()->back()->with('errors', $validator->errors());
 
         $attributes = global_attributes::find($input['id']);
         $attributes->name = $input['name'];
         $attributes->values = implode(',', $input['attribute_name']);
         $attributes->status = 1;
         $created = $attributes->save();
-        if($created)
-        {
+        if ($created) {
             return redirect()->back()->with('message', 'Attribute Updated Successfully');
-        }
-        else
-        {
+        } else {
             return back()->with('faild', 'Something went Wrong!')->withInput();
-        } 
+        }
     }
 
 
@@ -999,25 +958,25 @@ class AdminController extends Controller
     public function totalearning()
     {
         $data = payments::all();
-        return view('admin.earnings.totalearning')->with(array('data'=>$data));
+        return view('admin.earnings.totalearning')->with(array('data' => $data));
     }
 
 
     public function viewearning($id)
     {
         $data = payments::find($id);
-        return view('admin.earnings.view')->with(array('data'=>$data));
+        return view('admin.earnings.view')->with(array('data' => $data));
     }
     public function refund(Request $request)
     {
 
         $stripe = new \Stripe\StripeClient(
-          "".Cmf::get_site_settings_by_colum_name('secret_stripe').""
+            "" . Cmf::get_site_settings_by_colum_name('secret_stripe') . ""
         );
         $response = $stripe->paymentIntents->create([
-          'amount' => '1000',
-          'currency' => 'usd',
-          'payment_method_types' => ['card'],
+            'amount' => '1000',
+            'currency' => 'usd',
+            'payment_method_types' => ['card'],
         ]);
 
 
@@ -1027,7 +986,7 @@ class AdminController extends Controller
         $data = payments::find($request->charge_id);
         $stripe = new \Stripe\StripeClient(Cmf::get_site_settings_by_colum_name('secret_stripe'));
         $stripe->refunds->create(
-          ['payment_intent' => 'ch_3Kr1JOIoZddv8maD1dwRNxlU', 'amount' => 1000]
+            ['payment_intent' => 'ch_3Kr1JOIoZddv8maD1dwRNxlU', 'amount' => 1000]
         );
     }
 
@@ -1036,18 +995,18 @@ class AdminController extends Controller
     public function allcontactmessages()
     {
         $data = DB::table('contactuses')->get();
-        return view('admin.contact.allmessages')->with(array('data'=>$data));
+        return view('admin.contact.allmessages')->with(array('data' => $data));
     }
     public function contactview($id)
     {
-        $data2 = array('status'=>0);
-        DB::table('contactuses')->where('id' , $id)->update($data2);
-        $data = DB::table('contactuses')->where('id',$id)->get()->first();
-        return view('admin.contact.view')->with(array('data'=>$data));
+        $data2 = array('status' => 0);
+        DB::table('contactuses')->where('id', $id)->update($data2);
+        $data = DB::table('contactuses')->where('id', $id)->get()->first();
+        return view('admin.contact.view')->with(array('data' => $data));
     }
     public function deletecontactus($id)
     {
-        DB::table('contactuses')->where('id',$id)->delete();
+        DB::table('contactuses')->where('id', $id)->delete();
         return redirect()->back()->with('message', 'Deleted Successfully');
     }
 
@@ -1055,7 +1014,7 @@ class AdminController extends Controller
     public function newsletter()
     {
         $data = newsletters::all();
-        return view('admin.newsletters.index')->with(array('data'=>$data));
+        return view('admin.newsletters.index')->with(array('data' => $data));
     }
 
 
@@ -1064,8 +1023,7 @@ class AdminController extends Controller
         $subject = $request->subject;
         $emailbody = $request->emailbody;
         foreach ($request->allemails as $email) {
-            Mail::send(array('html' => 'frontend.email.newsletteremail'), array('emailbody' => $request->emailbody), function($message) use ($email, $subject)
-            {
+            Mail::send(array('html' => 'frontend.email.newsletteremail'), array('emailbody' => $request->emailbody), function ($message) use ($email, $subject) {
                 $message->to($email)->subject($subject);
             });
         }
@@ -1077,44 +1035,43 @@ class AdminController extends Controller
 
 
     public function coupon_list()
-    {   
+    {
         $coupons = Coupon::select(
             "coupons.id",
             "coupons.end_date",
             "coupons.start_date",
             "coupons.coupon_code",
-            "coupons.discount") 
+            "coupons.discount"
+        )
             ->paginate(10);
-         
-        return view('admin.coupen.list',compact("coupons"));
+
+        return view('admin.coupen.list', compact("coupons"));
     }
     public function addcoupon(Request $request)
-    {   
+    {
         return view('admin.coupen.add');
-
     }
 
     public function editcoupon($id)
-    {   
+    {
         $coupon = Coupon::find($id);
-        return view('admin.coupen.edit',compact("coupon"));
-
+        return view('admin.coupen.edit', compact("coupon"));
     }
 
     public function store_coupon(Request $request)
     {
         $input = $request->all();
 
-        $validator = Validator::make($input,[ 
+        $validator = Validator::make($input, [
             'date_range'  => 'required',
             'coupon_code'  => 'required',
             'discount'  => 'required',
-          
+
         ]);
 
-        if($validator->fails())
-         return redirect()->back()->with('errors', $validator->errors()); 
-    
+        if ($validator->fails())
+            return redirect()->back()->with('errors', $validator->errors());
+
         $dates = explode('-', $input['date_range']);
         $coupon = new Coupon;
         $coupon->start_date = $dates[0];
@@ -1123,12 +1080,9 @@ class AdminController extends Controller
         $coupon->discount = $input['discount'];
         $created = $coupon->save();
 
-        if($created)
-        {
+        if ($created) {
             return redirect()->back()->with('message', 'Coupon Added Successfully');
-        }
-        else
-        {
+        } else {
             return back()->with('faild', 'Something went Wrong!')->withInput();
         }
     }
@@ -1140,11 +1094,11 @@ class AdminController extends Controller
 
         //dd($input);
 
-        $validator = Validator::make($input,[ 
+        $validator = Validator::make($input, [
             'date_range'  => 'required',
             'coupon_code'  => 'required',
             'discount'  => 'required',
-          
+
         ]);
 
         $coupon = Coupon::find($input['id']);
@@ -1156,40 +1110,67 @@ class AdminController extends Controller
         $coupon->discount = $input['discount'];
         $created = $coupon->save();
 
-        if($created)
-        {
+        if ($created) {
             return redirect()->back()->with('message', 'Coupon Updated Successfully');
-        }
-        else
-        {
+        } else {
             return back()->with('faild', 'Something went Wrong!')->withInput();
         }
     }
     public function notifications()
     {
-        $data = DB::table('adminnotification')->orderby('id' , 'desc')->paginate(10);
-        return view('admin.notification.index')->with(array('data'=>$data));
+        $data = DB::table('adminnotification')->orderby('id', 'desc')->paginate(10);
+        return view('admin.notification.index')->with(array('data' => $data));
     }
     public function statuschange($id)
     {
-        $array = array('status'=>0);
-        $data = DB::table('adminnotification')->where('id' , $id)->update($array);
+        $array = array('status' => 0);
+        $data = DB::table('adminnotification')->where('id', $id)->update($array);
     }
 
 
-    public function allorders(){
-      
-        $data = order::orderby('id' , 'desc')->paginate(10);
-        return view('admin.orders.allorders')->with(array('data'=>$data));
+    public function allorders()
+    {
+
+        $data = order::orderby('id', 'desc')->paginate(10);
+        return view('admin.orders.allorders')->with(array('data' => $data));
     }
-    public function orderdetail($id){
-        $data = order::where('id',$id)->first();
-        return view('admin.orders.orderdetail')->with(array('data'=>$data));
+    public function orderdetail($id)
+    {
+        $order = order::find($id);
+        $order->new_status = "0";
+        $order->save();
+        $data = order::where('id', $id)->first();
+        return view('admin.orders.orderdetail')->with(array('data' => $data));
     }
 
-    public function orderdelete($id){
-        order::where('id',$id)->delete();
-        payments::where('order_id',$id)->delete();
+    public function orderdelete($id)
+    {
+        order::where('id', $id)->delete();
+        payments::where('order_id', $id)->delete();
         return redirect()->back()->with('message', 'Order Deleted Successfully');
+    }
+    public function updateorder(Request $request)
+    {
+        $order_id = $request['order_id'];
+        $status = $request['status'];
+        $order = order::find($order_id);
+        $order->order_status = $status;
+        $order->save();
+
+        $subject = 'Welcome To Vital Ray | Order Status';
+
+        $orderdata = DB::table('orders')->where('id', $order_id)->get()->first();
+         $name = $orderdata->name;
+         $order_status = $orderdata->order_status;
+         $total_price = $orderdata->total_price;
+
+        $product = DB::table('products')->where('id', $orderdata->product_id)->get()->first();
+        $product = $product->name;
+
+        Mail::send('frontend.email.orderstatus', ['name' => $name,'status'=> $order_status, 'productname' => $product, 'price' => $total_price, 'places_allowed' => 1], function ($message) use ( $orderdata, $subject) {
+            $message->to($orderdata->email);
+            $message->subject($subject);
+        });
+        return redirect()->back()->with('message', 'Order Updated Successfully');
     }
 }

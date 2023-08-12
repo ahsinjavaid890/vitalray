@@ -18,7 +18,13 @@
     <li class="side-nav-item">
         <a href="{{url('admin/order/allorders')}}" class="side-nav-link">
             <i class="uil-user"></i>
-            <span> Orders </span>
+            <span> Orders  </span>
+            @if ( DB::table('orders')->where('new_status','1')->count())
+            <span class="badge bg-secondary text-white p-1">
+                {{ DB::table('orders')->where('new_status','1')->count(); }}
+            </span>
+            @endif
+            
         </a>
     </li>
     <li class="side-nav-item">

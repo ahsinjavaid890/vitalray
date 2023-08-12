@@ -313,6 +313,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/allorders', [AdminController::class, 'allorders']);
         Route::get('/orderdetail/{id}', [AdminController::class, 'orderdetail']);
         Route::get('/orderdelete/{id}', [AdminController::class, 'orderdelete']);
+        Route::post('/updateorder', [AdminController::class, 'updateorder']);
     });
 
 

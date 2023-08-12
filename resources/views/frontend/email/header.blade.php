@@ -175,7 +175,7 @@
                                                     <tr>
                                                         <td style="width:200px;">
 
-                                                            <img height="auto" src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png" style="border:0;display:block;outline:none;text-decoration:none;width:100%;" width="64" />
+                                                            <img height="auto" width="100px" src="https://vitalray.us/public/front/media/logo.png" style="border:0;display:block;outline:none;text-decoration:none;margin:auto" width="64" />
 
                                                         </td>
                                                     </tr>

@@ -35,6 +35,7 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <th>Order Id </th>
                                                 <th>Customer Name</th>
 
                                                 <th>Product</th>
@@ -52,6 +53,13 @@
 
                                             <tr>
 
+                                                <td >{{ $order->id }}
+                                                    @if ( DB::table('orders')->where('id',$order->id)->where('new_status','1')->count())
+                                                    <span class="badge bg-secondary text-white p-1">
+                                                        New
+                                                    </span>
+                                                    @endif
+                                                </td>
                                                 <td>{{ $order->name }}</td>
 
                                                 <td>{{

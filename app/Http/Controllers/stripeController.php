@@ -57,7 +57,7 @@ class stripeController extends Controller
                 $order->product_id =  $product_id;
                 $order->qty =  1;
                 $order->total_price = $price;
-                $order->payment_type =  $paymenyResponse['calculated_statement_descriptor'];
+                $order->payment_type = "Stripe";
                 $order->payment_status = $paymenyResponse['status'] ;
                 $order->order_status = "Pending";
                 $order->new_status =  "1";
