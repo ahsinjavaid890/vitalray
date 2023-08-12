@@ -1,1 +1,1 @@
-a:4:{s:3:"url";a:1:{s:8:"intended";s:25:"http://localhost/vitalray";}s:9:"_previous";a:1:{s:3:"url";s:33:"http://localhost/vitalray/success";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}s:6:"_token";s:40:"H2hZWaRj6GEgx8rltaR3BwduKZvUcPvgjDDpsCw0";}
+a:6:{s:3:"url";a:1:{s:8:"intended";s:33:"http://localhost/vitalray/conferm";}s:9:"_previous";a:1:{s:3:"url";s:33:"http://localhost/vitalray/success";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}s:6:"_token";s:40:"H2hZWaRj6GEgx8rltaR3BwduKZvUcPvgjDDpsCw0";s:10:"product_id";s:1:"6";s:8:"order_id";i:30;}

@@ -53,45 +53,40 @@ class ProductCheckoutController extends Controller
         $order->payment_status = "pending";
         $order->save();
 
-        Session::put('product_id', $product_id);
+        Session::put('order_id', $order->id);
 
         $totalprice = round($request->price + 4);
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
         $item_1 = new Item();
-        $item_1->setName('Product 1')
-            ->setCurrency('USD')
-            ->setQuantity(1)
-            ->setPrice($totalprice);
+        $item_1->setName('Product 1')->setCurrency('USD')->setQuantity(1)->setPrice($totalprice);
         $item_list = new ItemList();
         $item_list->setItems(array($item_1));
         $amount = new Amount();
-        $amount->setCurrency('USD')
-            ->setTotal($totalprice);
+        $amount->setCurrency('USD')->setTotal($totalprice);
         $transaction = new Transaction();
-        $transaction->setAmount($amount)->setItemList($item_list)
-            ->setDescription('Enter Your transaction description');
+        $transaction->setAmount($amount)->setItemList($item_list)->setDescription('Enter Your transaction description');
         $redirect_urls = new RedirectUrls();
-        $redirect_urls->setReturnUrl(URL::route('status'))
-            ->setCancelUrl(URL::route('status'));
+        $redirect_urls->setReturnUrl(URL::route('paypalcheckout'))->setCancelUrl(URL::route('paypalcheckout'));
         $payment = new Payment();
-        $payment->setIntent('Sale')
-            ->setPayer($payer)
-            ->setRedirectUrls($redirect_urls)
-            ->setTransactions(array($transaction));
+        $payment->setIntent('Sale')->setPayer($payer)->setRedirectUrls($redirect_urls)->setTransactions(array($transaction));
         try {
             $payment->create($this->_api_context);
         } catch (\PayPal\Exception\PPConnectionException $ex) {
             if (\Config::get('app.debug')) {
-                \Session::put('warning', 'Connection timeout');
-                return Redirect::route('paywithpaypal');
 
-                $url = url('stepthree');
-                return Redirect::to($url);
+
+                
+
+
+
             } else {
-                \Session::put('warning', 'Some error occur, sorry for inconvenient');
-                $url = url('stepthree');
-                return Redirect::to($url);
+
+
+               
+
+
+
             }
         }
 
@@ -130,33 +125,11 @@ class ProductCheckoutController extends Controller
         $result = $payment->execute($execution, $this->_api_context);
 
         if ($result->getState() == 'approved') {
-
-
-
-            $plainid = Session::get('plainid');
-
-            $plan = Plan::find($plainid);
-            $update = User::find(Auth::user()->id);
-            $update->plan = $plainid;
-            $update->payement_method = 'paypal';
-            $update->save();
-
-            $user = Auth::user();
-            $plandata = DB::table('plans')->where('id', $plainid)->get()->first();
-            $subject = 'Welcome To Vital Ray | Invoice for Purchasing Plan';
-            Mail::send('frontend.email.invoice', ['name' => 'test', 'planname' => $plandata->name, 'price' => $plandata->price, 'places_allowed' => 1], function ($message) use ($user, $subject) {
-                $message->to($user->email);
-                $message->subject($subject);
-            });
-            $next_due_date = date('d/m/Y', strtotime("+$plandata->no_of_days days"));
-            $plan = new subscriptions();
-            $plan->user_id = Auth::user()->id;
-            $plan->name = $plandata->name;
-            $plan->plan_id = $plainid;
-            $plan->ends_at = $next_due_date;
-            $plan->save();
-            $url = url('conferm');
-            return Redirect::to($url);
+            $order_id = Session::get('order_id');
+            $order = order::find($order_id);
+            $order->payment_status = "succeded";
+            $order->save();
+            return response()->redirectTo('success')->with('success','Payment Successfull!');
         } else {
             \Session::put('warning', 'Payment failed due to very very panga !!');
             $orderid = Session::get('orderid');

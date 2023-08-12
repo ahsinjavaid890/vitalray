@@ -32,6 +32,7 @@ Route::get('/paypal', [PayPalController::class, 'getPaymentStatus'])->name('stat
 
 
 Route::post('sendcheckoutpayementpaypal', [ProductCheckoutController::class, 'sendcheckoutpayementpaypal']);
+Route::get('/paypalcheckout', [ProductCheckoutController::class, 'getPaymentStatus'])->name('paypalcheckout');
 
 
 
@@ -310,6 +311,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/allorders', [AdminController::class, 'allorders']);
         Route::get('/orderdetail/{id}', [AdminController::class, 'orderdetail']);
         Route::get('/orderdelete/{id}', [AdminController::class, 'orderdelete']);
+        Route::post('/updateorder', [AdminController::class, 'updateorder']);
     });
 
 

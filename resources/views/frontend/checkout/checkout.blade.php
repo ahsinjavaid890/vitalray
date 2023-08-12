@@ -91,7 +91,70 @@ $product = DB::table('products')->where('url',$url)->first();
                             @include('frontend.layouts.include.googlepay')
                         </div>
                         <div class="paypalpaydiv hideallforms mt-5 mb-5">
-                            <a style="height: 40px;" href="{{ url('paypalpayement') }}/{{$product->id}}" class="btn btn-default mt-4 d-flex align-items-center justify-content-center">Pay ${{ number_format($product->price+4, 2) }} from Paypal</a>
+                            <form method="POST" action="{{ url('sendcheckoutpayementpaypal') }}">
+                                @csrf
+                            <div class="row mt-5">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-outline form-black mb-4">
+                                                <input required type="text" name="name" class="form-control form-control-lg" value="">
+                                                <label class="form-label">Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-outline form-black mb-4">
+                                                <input required type="text" name="email" class="form-control form-control-lg" value="">
+                                                <label class="form-label">Email</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-outline form-black mb-4">
+                                                <input required type="text" name="phonenumber" class="form-control form-control-lg" value="">
+                                                <label class="form-label">Phone Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-outline form-black mb-4">
+                                                <input required type="text" name="zipcode" class="form-control form-control-lg" value="">
+                                                <label class="form-label">Zipcode</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-outline form-black mb-4">
+                                                <input required type="text" name="state" class="form-control form-control-lg" value="">
+                                                <label class="form-label">State</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-outline form-black mb-4">
+                                                <input required type="text" name="city" class="form-control form-control-lg" value="">
+                                                <label class="form-label">City</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-outline form-black mb-4">
+                                                <textarea required name="address" class="form-control form-control-lg"></textarea>
+                                                <label class="form-label">Address</label>
+                                            </div>
+                                        </div>
+                                    </div>                                               
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 text-right">
+                                    <input type="hidden" name="product_id" value="{{$product->id}}">
+                                    <input type="hidden" name="price" value="{{$product->price}}">
+                                    <button type="submit" class="btn primary-button btn-block form-control">Complete Purchase</button>
+                                </div>
+                            </div>
+                            </form>
                         </div>
                         <form role="form" action="{{ url('stripepayment') }}" method="post" class="require-validation cardpaydiv" data-cc-on-file="false" data-stripe-publishable-key="{{ env('STRIPE_KEY') }}" id="payment-form">
                          @csrf
@@ -166,7 +229,7 @@ $product = DB::table('products')->where('url',$url)->first();
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-outline form-black mb-4">
-                                            <input id="cvv" autocomplete='off' class='form-control form-control-lg card-cvc' placeholder='ex. 311' maxlength="3" type='text'>
+                                            <input id="cvv" autocomplete='off' class='form-control form-control-lg card-cvc' placeholder='ex. 311' maxlength="4" type='text'>
                                             <label class="form-label">CVC</label>
                                         </div>
                                     </div>
